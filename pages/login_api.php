@@ -1,7 +1,7 @@
 <?php
 // ============================================
 // LOGIN_API.PHP - Login & Password Reset
-// Database: stock_market
+// Database: stock_master
 // ============================================
 
 error_reporting(E_ALL);
@@ -161,12 +161,12 @@ if ($action === 'send-otp') {
             <p>Your OTP for password reset is:</p>
             <p class='otp'>$otp</p>
             <p class='note'>This OTP is valid for 10 minutes.</p>
-            <p class='note'>If you didn't request this, please ignore this email.</p>
+            <p class='note'>If you did not request this, please ignore this email.</p>
         </div>
     </body>
     </html>
     ";
-    
+
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=UTF-8\r\n";
     $headers .= "From: noreply@stockmarket.com\r\n";
