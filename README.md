@@ -1,13 +1,21 @@
-# StockMaster
+# StockMaster: Modular Inventory Management System (IMS)
 
-Team Details
+## 📌 Problem Statement
+**StockMaster** aims to build a modular Inventory Management System (IMS) that digitizes and streamlines all stock-related operations within a business. 
 
-Team Leader Name: Ayush Mhatre
-Team Member 1: Manthan Railkar
-Team Member 2: Omkar Thakurdesai
+The primary goal is to replace manual registers, Excel sheets, and scattered tracking methods with a **centralized, real-time, and easy-to-use application.**
 
-Problem Statement: StockMaster: Build a modular Inventory Management System (IMS) that digitizes and streamlines all stock-related operations within a business. The goal is to replace manual registers, Excel sheets, and scattered tracking methods with a centralized, real-time, easy-to-use app.
+## 👥 Team Details
 
-Reviewer
-Aman Patel (ampa)
+| Role | Name |
+| :--- | :--- |
+| **Team Leader** | **Ayush Mhatre** |
+| Team Member | Manthan Railkar |
+| Team Member | Omkar Thakurdesai |
 
+---
+
+## 👨‍🏫 Reviewer Details
+
+* **Name:** Aman Patel
+* **GitHub Username:** [@ampa-odoo](https://github.com/ampa-odoo)
