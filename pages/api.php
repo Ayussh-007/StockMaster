@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // DATABASE CONNECTION
 // ============================================
 $host = 'localhost';
-$dbname = 'stock_market';    // Your database name
+$dbname = 'stock_master';    // Your database name
 $username = 'root';           // Default XAMPP username
 $password = '';               // Default XAMPP has no password
 
