@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InventoryPro - Sign Up</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 50%, #fefce8 100%);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(90deg, #d97706 0%, #f97316 50%, #d97706 100%);
+      padding: 1.5rem 2rem;
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .logo-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .logo-text h1 {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo-text p {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.875rem;
+    }
+
+    .header-features {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .header-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.875rem;
+    }
+
+    .header-feature svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Main Content */
+    .main {
+      display: flex;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(251, 146, 60, 0.15);
+      padding: 2rem;
+      border: 1px solid rgba(251, 146, 60, 0.1);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+    }
+
+    .card-icon svg {
+      width: 36px;
+      height: 36px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .card-header h2 {
+      color: #1e293b;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-header p {
+      color: #64748b;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-label .required {
+      color: #f97316;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+
+    .form-input.valid {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .form-input.invalid {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .input-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+    }
+
+    .input-hint {
+      color: #94a3b8;
+    }
+
+    .input-counter {
+      color: #94a3b8;
+    }
+
+    .input-error {
+      color: #ef4444;
+    }
+
+    /* Password Toggle */
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #94a3b8;
+      padding: 4px;
+    }
+
+    .password-toggle:hover {
+      color: #64748b;
+    }
+
+    .password-toggle svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Password Requirements */
+    .password-requirements {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .requirement {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .requirement.met {
+      color: #10b981;
+    }
+
+    .requirement svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Checkbox */
+    .checkbox-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: #fffbeb;
+      border-radius: 12px;
+      border: 1px solid #fef3c7;
+      margin-bottom: 1.25rem;
+    }
+
+    .checkbox-wrapper input {
+      width: 18px;
+      height: 18px;
+      accent-color: #f59e0b;
+      margin-top: 2px;
+    }
+
+    .checkbox-wrapper label {
+      font-size: 0.875rem;
+      color: #475569;
+    }
+
+    .checkbox-wrapper a {
+      color: #d97706;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .checkbox-wrapper a:hover {
+      text-decoration: underline;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .submit-btn.active {
+      background: linear-gradient(90deg, #f59e0b 0%, #f97316 100%);
+      color: white;
+      box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+    }
+
+    .submit-btn.active:hover {
+      box-shadow: 0 15px 30px rgba(249, 115, 22, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .submit-btn.disabled {
+      background: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .submit-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      transition: transform 0.2s;
+    }
+
+    .submit-btn.active:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* Footer */
+    .signin-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #64748b;
+    }
+
+    .signin-link a {
+      color: #d97706;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .signin-link a:hover {
+      text-decoration: underline;
+    }
+
+    .copyright {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-features {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </div>
+        <h2>Create Your Account</h2>
+        <p>Start managing your inventory efficiently</p>
+      </div>
+
+      <!-- Login ID -->
+      <div class="form-group">
+        <label class="form-label">Login ID <span class="required">*</span></label>
+        <input type="text" id="loginId" class="form-input" placeholder="Enter 6-12 characters" maxlength="12">
+        <div class="input-info">
+          <span id="loginIdError" class="input-hint">Must be unique</span>
+          <span id="loginIdCounter" class="input-counter">0/12</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Email Address <span class="required">*</span></label>
+        <input type="email" id="email" class="form-input" placeholder="your@email.com">
+        <div class="input-info">
+          <span id="emailError" class="input-hint"></span>
+        </div>
+      </div>
+
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label">Password <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <input type="password" id="password" class="form-input" placeholder="Create a strong password" style="padding-right: 48px;">
+          <button type="button" class="password-toggle" id="togglePassword">
+            <svg id="eyeIcon" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        
+      </div>
+
+      <!-- Terms -->
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="terms">
+        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+
+      <!-- Submit -->
+      <button type="button" id="submitBtn" class="submit-btn disabled" disabled>
+        Create Account
+        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+
+      <p class="signin-link">Already have an account? <a href="#">Sign in</a></p>
+    </div>
+  </main>
+
+  <p class="copyright">© 2025 InventoryPro. All rights reserved.</p>
+
+  <script>
+    // Simulated database
+    const existingUsers = ['admin123', 'user2024', 'manager1'];
+    const existingEmails = ['admin@company.com', 'user@test.com'];
+
+    // Elements
+    const loginIdInput = document.getElementById('loginId');
+    const emailInput = document.getElementById('email');
+    const companyInput = document.getElementById('company');
+    const passwordInput = document.getElementById('password');
+    const termsCheckbox = document.getElementById('terms');
+    const submitBtn = document.getElementById('submitBtn');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    // Password visibility toggle
+    let passwordVisible = false;
+    togglePassword.addEventListener('click', () => {
+      passwordVisible = !passwordVisible;
+      passwordInput.type = passwordVisible ? 'text' : 'password';
+      eyeIcon.innerHTML = passwordVisible 
+        ? '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>'
+        : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+    });
+
+    // Validation functions
+    function validateLoginId(id) {
+      if (id.length < 6 || id.length > 12) return 'Must be 6-12 characters';
+      if (existingUsers.includes(id.toLowerCase())) return 'Login ID already exists';
+      return '';
+    }
+
+    function validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regex.test(email)) return 'Invalid email format';
+      if (existingEmails.includes(email.toLowerCase())) return 'Email already registered';
+      return '';
+    }
+
+    function validatePassword(pwd) {
+      return {
+        length: pwd.length >= 8,
+        lower: /[a-z]/.test(pwd),
+        upper: /[A-Z]/.test(pwd),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(pwd)
+      };
+    }
+
+    function updateRequirement(id, met) {
+      const el = document.getElementById(id);
+      const svg = met 
+        ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '<svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+      el.querySelector('svg').outerHTML = svg;
+      el.classList.toggle('met', met);
+    }
+
+    function checkFormValidity() {
+      const loginIdValid = loginIdInput.value && !validateLoginId(loginIdInput.value);
+      const emailValid = emailInput.value && !validateEmail(emailInput.value);
+      const companyValid = companyInput.value.trim() !== '';
+      const pwdChecks = validatePassword(passwordInput.value);
+      const passwordValid = Object.values(pwdChecks).every(Boolean);
+      const termsAccepted = termsCheckbox.checked;
+
+      const isValid = loginIdValid && emailValid && companyValid && passwordValid && termsAccepted;
+      
+      submitBtn.disabled = !isValid;
+      submitBtn.className = isValid ? 'submit-btn active' : 'submit-btn disabled';
+    }
+
+    // Event listeners
+    loginIdInput.addEventListener('input', () => {
+      const val = loginIdInput.value;
+      document.getElementById('loginIdCounter').textContent = `${val.length}/12`;
+      const error = validateLoginId(val);
+      const errorEl = document.getElementById('loginIdError');
+      
+      if (val.length === 0) {
+        loginIdInput.classList.remove('valid', 'invalid');
+        errorEl.textContent = 'Must be unique';
+        errorEl.className = 'input-hint';
+      } else if (error) {
+        loginIdInput.classList.remove('valid');
+        loginIdInput.classList.add('invalid');
+        errorEl.textContent = error;
+        errorEl.className = 'input-error';
+      } else {
+        loginIdInput.classList.remove('invalid');
+        loginIdInput.classList.add('valid');
+        errorEl.textContent = 'Available!';
+        errorEl.className = 'input-hint';
+        errorEl.style.color = '#10b981';
+      }
+      checkFormValidity();
+    });
+
+    emailInput.addEventListener('input', () => {
+      const val = emailInput.value;
+      const error = validateEmail(val);
+      const errorEl = document.getElementById('emailError');
+      
+      if (val.length === 0) {
+        emailInput.classList.remove('valid', 'invalid');
+        errorEl.textContent = '';
+      } else if (error) {
+        emailInput.classList.remove('valid');
+        emailInput.classList.add('invalid');
+        errorEl.textContent = error;
+        errorEl.className = 'input-error';
+      } else {
+        emailInput.classList.remove('invalid');
+        emailInput.classList.add('valid');
+        errorEl.textContent = '';
+      }
+      checkFormValidity();
+    });
+
+    companyInput.addEventListener('input', checkFormValidity);
+
+    passwordInput.addEventListener('input', () => {
+      const checks = validatePassword(passwordInput.value);
+      updateRequirement('req-length', checks.length);
+      updateRequirement('req-lower', checks.lower);
+      updateRequirement('req-upper', checks.upper);
+      updateRequirement('req-special', checks.special);
+      
+      const allMet = Object.values(checks).every(Boolean);
+      if (passwordInput.value.length === 0) {
+        passwordInput.classList.remove('valid', 'invalid');
+      } else if (allMet) {
+        passwordInput.classList.remove('invalid');
+        passwordInput.classList.add('valid');
+      } else {
+        passwordInput.classList.remove('valid');
+      }
+      checkFormValidity();
+    });
+
+    termsCheckbox.addEventListener('change', checkFormValidity);
+
+    submitBtn.addEventListener('click', () => {
+      if (!submitBtn.disabled) {
+        alert('Account created successfully!\n\nLogin ID: ' + loginIdInput.value + '\nEmail: ' + emailInput.value + '\nCompany: ' + companyInput.value);
+      }
+    });
+  </script>
+</body>
+</html>
