@@ -1,7 +1,16 @@
 <?php
+// ======================= PHPMailer (manual) =======================
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require __DIR__ . '/src/Exception.php';
+require __DIR__ . '/src/PHPMailer.php';
+require __DIR__ . '/src/SMTP.php';
+// ================================================================
+
 // ============================================
 // LOGIN_API.PHP - Login & Password Reset
-// Database: stock_market
+// Database: stock_master
 // ============================================
 
 error_reporting(E_ALL);
@@ -20,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // DATABASE CONNECTION
 // ============================================
 $host = 'localhost';
-$dbname = 'stock_master';
+$dbname = 'stock_master';   // <-- make sure this matches your DB
 $username = 'root';
 $password = '';
 
@@ -34,6 +43,7 @@ try {
 }
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';
+
 
 // ============================================
 // ACTION: LOGIN
@@ -82,6 +92,7 @@ if ($action === 'login') {
     exit;
 }
 
+
 // ============================================
 // ACTION: CHECK EMAIL EXISTS (for forgot password)
 // ============================================
@@ -104,21 +115,22 @@ if ($action === 'check-email-exists') {
     exit;
 }
 
+
 // ============================================
-// ACTION: SEND OTP
+// ACTION: SEND OTP  (PHPMailer + Gmail SMTP)
 // ============================================
 if ($action === 'send-otp') {
     $jsonData = file_get_contents('php://input');
     $data = json_decode($jsonData, true);
-    
+
     $email = isset($data['email']) ? trim($data['email']) : '';
-    
+
     if (empty($email)) {
         http_response_code(400);
         echo json_encode(['error' => 'Email is required']);
         exit;
     }
-    
+
     // Check if email exists
     $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE email_id = ?");
     $stmt->execute([$email]);
@@ -127,61 +139,82 @@ if ($action === 'send-otp') {
         echo json_encode(['error' => 'Email not registered']);
         exit;
     }
-    
+
     // Generate 6-digit OTP
     $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
     $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
-    
+
     // Delete old OTPs for this email
     $stmt = $pdo->prepare("DELETE FROM password_reset_otp WHERE email_id = ?");
     $stmt->execute([$email]);
-    
+
     // Insert new OTP
     $stmt = $pdo->prepare("INSERT INTO password_reset_otp (email_id, otp, expires_at) VALUES (?, ?, ?)");
     $stmt->execute([$email, $otp, $expiresAt]);
-    
+
     // ============================================
-    // SEND EMAIL WITH OTP
+    // SEND EMAIL WITH OTP USING PHPMailer (SMTP)
     // ============================================
-    $to = $email;
-    $subject = "Password Reset OTP - Stock Market";
-    $message = "
-    <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif; }
-            .container { padding: 20px; background: #f8f9fa; border-radius: 10px; }
-            .otp { font-size: 32px; font-weight: bold; color: #f59e0b; letter-spacing: 5px; }
-            .note { color: #666; font-size: 14px; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <h2>Password Reset Request</h2>
-            <p>Your OTP for password reset is:</p>
-            <p class='otp'>$otp</p>
-            <p class='note'>This OTP is valid for 10 minutes.</p>
-            <p class='note'>If you didn't request this, please ignore this email.</p>
-        </div>
-    </body>
-    </html>
-    ";
-    
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: noreply@stockmarket.com\r\n";
-    
-    // Try to send email
-    $emailSent = @mail($to, $subject, $message, $headers);
-    
-    // For hackathon/testing: Return OTP in response (REMOVE IN PRODUCTION!)
-    echo json_encode([
-        'success' => true,
-        'message' => 'OTP sent to your email',
-        'debug_otp' => $otp  // REMOVE THIS LINE IN PRODUCTION!
-    ]);
-    exit;
+    $mail = new PHPMailer(true);
+
+    try {
+        // SMTP config (Gmail)
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'stockmaster312@gmail.com';        // TODO: change
+        $mail->Password   = 'Hackathon';     // TODO: change (16-char app password)
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        // Sender & recipient
+        $mail->setFrom('yourgmail@gmail.com', 'StockMaster');  // TODO: same Gmail as above
+        $mail->addAddress($email);
+
+        // Email content
+        $mail->isHTML(true);
+        $mail->Subject = 'Password Reset OTP - StockMaster';
+
+        $mailBody = "
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { padding: 20px; background: #f9fafb; border-radius: 10px; border: 1px solid #e5e7eb; }
+                .otp { font-size: 32px; font-weight: bold; color: #2563eb; letter-spacing: 5px; }
+                .note { color: #4b5563; font-size: 14px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h2>Password reset request</h2>
+                <p>Your OTP for password reset is:</p>
+                <p class='otp'>{$otp}</p>
+                <p class='note'>This OTP is valid for 10 minutes.</p>
+                <p class='note'>If you did not request this, you can safely ignore this email.</p>
+            </div>
+        </body>
+        </html>
+        ";
+
+        $mail->Body = $mailBody;
+
+        // Send
+        $mail->send();
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'OTP sent to your email'
+        ]);
+        exit;
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to send OTP email. Please try again later.']);
+        // For debugging (temporarily): echo $mail->ErrorInfo;
+        exit;
+    }
 }
+
 
 // ============================================
 // ACTION: VERIFY OTP
@@ -219,6 +252,7 @@ if ($action === 'verify-otp') {
     ]);
     exit;
 }
+
 
 // ============================================
 // ACTION: RESET PASSWORD
@@ -281,9 +315,9 @@ if ($action === 'reset-password') {
     exit;
 }
 
+
 // ============================================
 // INVALID ACTION
 // ============================================
 http_response_code(400);
 echo json_encode(['error' => 'Invalid action']);
-?>

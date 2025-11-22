@@ -65,12 +65,14 @@
       </div>
     </div>
 
+    <!-- Mobile Overlay -->
     <div
       id="mobile-overlay"
       onclick="toggleSidebar()"
       class="fixed inset-0 bg-black/20 z-20 hidden lg:hidden"
     ></div>
 
+    <!-- Sidebar -->
     <aside
       id="sidebar"
       class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 sidebar-transition flex flex-col h-full"
@@ -101,14 +103,18 @@
         <a
           href="dashboard.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
-          Dashboard</a
         >
+          <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+          Dashboard
+        </a>
         <a
           href="products.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="package" class="w-5 h-5 mr-3"></i> Products</a
         >
+          <i data-lucide="package" class="w-5 h-5 mr-3"></i>
+          Products
+        </a>
+
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
         >
@@ -117,26 +123,32 @@
         <a
           href="receipts.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
-          Receipts</a
         >
+          <i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
+          Receipts
+        </a>
         <a
           href="delivery.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders</a
         >
+          <i data-lucide="truck" class="w-5 h-5 mr-3"></i>
+          Delivery Orders
+        </a>
         <a
           href="inventoryadj.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i> Inventory
-          Adj.</a
         >
+          <i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i>
+          Inventory Adj.
+        </a>
         <a
           href="movehistory.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 bg-sky-50 text-sky-600 font-medium transition-colors"
-          ><i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i> Move
-          History</a
         >
+          <i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i>
+          Move History
+        </a>
+
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
         >
@@ -145,11 +157,15 @@
         <a
           href="settings.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="settings" class="w-5 h-5 mr-3"></i> Settings</a
         >
+          <i data-lucide="settings" class="w-5 h-5 mr-3"></i>
+          Settings
+        </a>
       </nav>
 
+      <!-- Bottom profile with dynamic login ID -->
       <div class="p-4 border-t border-gray-100 relative">
+        <!-- Logged-in state -->
         <div id="user-profile" class="hidden">
           <button
             onclick="toggleProfileMenu()"
@@ -158,13 +174,16 @@
             <div
               class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold border-2 border-white shadow-sm"
             >
-              A
+              <span id="user-avatar-text">U</span>
             </div>
             <div class="ml-3 flex-1 overflow-hidden">
-              <p class="text-sm font-semibold text-gray-900 truncate">
-                Alex Manager
+              <p class="text-xs text-gray-500 truncate">Logged in as</p>
+              <p
+                id="user-login-id"
+                class="text-sm font-semibold text-gray-900 truncate"
+              >
+                User
               </p>
-              <p class="text-xs text-gray-500 truncate">Warehouse Admin</p>
             </div>
             <i data-lucide="chevron-up" class="w-4 h-4 text-gray-400"></i>
           </button>
@@ -175,30 +194,37 @@
             <a
               href="#"
               class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex items-center"
-              ><i data-lucide="user" class="w-4 h-4 mr-2"></i> My Profile</a
             >
+              <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+              My Profile
+            </a>
             <div class="border-t border-gray-100"></div>
             <button
               onclick="logout()"
               class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center"
             >
-              <i data-lucide="log-out" class="w-4 h-4 mr-2"></i> Log Out
+              <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+              Log Out
             </button>
           </div>
         </div>
+
+        <!-- Guest state -->
         <div id="guest-profile" class="hidden">
           <div class="p-3 bg-gray-50 rounded-xl text-center space-y-3">
             <p class="text-sm text-gray-500 mb-2">Welcome to StockMaster</p>
             <a
               href="login.php"
               class="block w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
-              >Log In</a
             >
+              Log In
+            </a>
           </div>
         </div>
       </div>
     </aside>
 
+    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden w-full">
       <header
         class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 lg:px-8 z-10 shrink-0"
@@ -241,6 +267,7 @@
 
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
         <div class="max-w-7xl mx-auto">
+          <!-- Filters -->
           <div
             class="bg-white border border-gray-200 rounded-2xl shadow-sm mb-6"
           >
@@ -281,6 +308,7 @@
             </div>
           </div>
 
+          <!-- Table -->
           <div
             class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden"
           >
@@ -326,6 +354,7 @@
                       >
                     </td>
                   </tr>
+                  <!-- Add more rows here as needed -->
                 </tbody>
               </table>
             </div>
@@ -336,7 +365,22 @@
 
     <script>
       lucide.createIcons();
+
       let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+      function updateUserUI() {
+        const loginId = localStorage.getItem("loginId") || "User";
+        const loginIdElement = document.getElementById("user-login-id");
+        const avatarTextElement = document.getElementById("user-avatar-text");
+
+        if (loginIdElement) {
+          loginIdElement.innerText = loginId;
+        }
+        if (avatarTextElement && loginId.length > 0) {
+          avatarTextElement.innerText = loginId.charAt(0).toUpperCase();
+        }
+      }
+
       function checkLoginState() {
         const userProfile = document.getElementById("user-profile");
         const guestProfile = document.getElementById("guest-profile");
@@ -346,25 +390,32 @@
           userProfile.classList.remove("hidden");
           guestProfile.classList.add("hidden");
           if (authOverlay) authOverlay.classList.add("hidden");
+          updateUserUI();
         } else {
           userProfile.classList.add("hidden");
           guestProfile.classList.remove("hidden");
           if (authOverlay) authOverlay.classList.remove("hidden");
         }
       }
+
       function toggleProfileMenu() {
         document.getElementById("profile-menu").classList.toggle("hidden");
       }
+
       function logout() {
         localStorage.setItem("isLoggedIn", "false");
+        localStorage.removeItem("loginId");
+        isLoggedIn = false;
         window.location.href = "login.php";
       }
+
       function toggleSidebar() {
         document
           .getElementById("sidebar")
           .classList.toggle("-translate-x-full");
         document.getElementById("mobile-overlay").classList.toggle("hidden");
       }
+
       checkLoginState();
     </script>
   </body>
