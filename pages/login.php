@@ -15,212 +15,212 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-    body {
-        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        background: #f3f4f6;
-        min-height: 100vh;
-    }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f3f4f6;
+            min-height: 100vh;
+        }
 
-    .auth-wrapper {
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
+        .auth-wrapper {
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
 
-    .auth-card {
-        border-radius: 18px;
-        border: 1px solid rgba(148, 163, 184, 0.25);
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(148, 163, 184, 0.12);
-        background: #ffffff;
-        color: #111827;
-    }
+        .auth-card {
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(148, 163, 184, 0.12);
+            background: #ffffff;
+            color: #111827;
+        }
 
-    /* Branding */
-    .brand-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.35rem 0.9rem;
-        border-radius: 999px;
-        background: #eef2ff;
-        border: 1px solid rgba(129, 140, 248, 0.5);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #4b5563;
-    }
+        /* Branding */
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            background: #eef2ff;
+            border: 1px solid rgba(129, 140, 248, 0.5);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #4b5563;
+        }
 
-    .brand-icon {
-        width: 26px;
-        height: 26px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: radial-gradient(circle at 30% 30%, #6366f1, #3b82f6);
-        color: #eef2ff;
-        font-weight: 700;
-        font-size: 0.8rem;
-    }
+        .brand-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 30% 30%, #6366f1, #3b82f6);
+            color: #eef2ff;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
 
-    .brand-title {
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        font-size: 0.78rem;
-    }
+        .brand-title {
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            font-size: 0.78rem;
+        }
 
-    .auth-title {
-        font-size: 1.7rem;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-    }
+        .auth-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
 
-    .auth-subtitle {
-        color: #6b7280;
-        font-size: 0.92rem;
-    }
+        .auth-subtitle {
+            color: #6b7280;
+            font-size: 0.92rem;
+        }
 
-    /* Form Elements */
-    .form-label {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #6b7280;
-        margin-bottom: 0.25rem;
-    }
+        /* Form Elements */
+        .form-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
 
-    .form-control {
-        border-radius: 999px;
-        background: #f9fafb;
-        border: 1px solid rgba(148, 163, 184, 0.8);
-        color: #111827;
-        padding: 0.6rem 0.9rem;
-        font-size: 0.9rem;
-    }
+        .form-control {
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            color: #111827;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.9rem;
+        }
 
-    .form-control:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.4);
-        background-color: #ffffff;
-    }
+        .form-control:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.4);
+            background-color: #ffffff;
+        }
 
-    /* Buttons */
-    .btn-primary-gradient {
-        border-radius: 999px;
-        border: none;
-        padding: 0.65rem 1.1rem;
-        font-size: 0.9rem;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        background-image: linear-gradient(120deg, #6366f1, #3b82f6);
-        color: #f9fafb;
-        transition: all 0.2s;
-    }
+        /* Buttons */
+        .btn-primary-gradient {
+            border-radius: 999px;
+            border: none;
+            padding: 0.65rem 1.1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background-image: linear-gradient(120deg, #6366f1, #3b82f6);
+            color: #f9fafb;
+            transition: all 0.2s;
+        }
 
-    .btn-primary-gradient:hover:not(:disabled) {
-        filter: brightness(1.05);
-        transform: translateY(-1px);
-    }
+        .btn-primary-gradient:hover:not(:disabled) {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
 
-    .btn-primary-gradient:disabled {
-        background: #e5e7eb;
-        color: #9ca3af;
-        cursor: not-allowed;
-    }
+        .btn-primary-gradient:disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
 
-    .btn-outline-dark-rounded {
-        border-radius: 999px;
-        border-width: 1px;
-        padding: 0.5rem 1rem;
-        font-size: 0.82rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
+        .btn-outline-dark-rounded {
+            border-radius: 999px;
+            border-width: 1px;
+            padding: 0.5rem 1rem;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
 
-    /* Links & Utilities */
-    .link-sm {
-        font-size: 0.82rem;
-        color: #2563eb;
-        text-decoration: none;
-    }
+        /* Links & Utilities */
+        .link-sm {
+            font-size: 0.82rem;
+            color: #2563eb;
+            text-decoration: none;
+        }
 
-    .link-sm:hover {
-        color: #1d4ed8;
-    }
+        .link-sm:hover {
+            color: #1d4ed8;
+        }
 
-    .text-muted-xs {
-        font-size: 0.78rem;
-        color: #6b7280;
-    }
+        .text-muted-xs {
+            font-size: 0.78rem;
+            color: #6b7280;
+        }
 
-    .divider {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: #9ca3af;
-    }
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #9ca3af;
+        }
 
-    .divider::before,
-    .divider::after {
-        content: "";
-        height: 1px;
-        flex: 1;
-        background: linear-gradient(to right, transparent, rgba(209, 213, 219, 0.9));
-    }
+        .divider::before,
+        .divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(to right, transparent, rgba(209, 213, 219, 0.9));
+        }
 
-    /* Password Toggle Button */
-    .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        padding: 5px;
-        cursor: pointer;
-        color: #6b7280;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+        /* Password Toggle Button */
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .password-toggle:hover {
-        color: #4b5563;
-    }
+        .password-toggle:hover {
+            color: #4b5563;
+        }
 
-    .alert-custom {
-        border-radius: 12px;
-        font-size: 0.85rem;
-    }
+        .alert-custom {
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
 
-    /* Modal Specifics */
-    .modal-content {
-        border-radius: 18px;
-        border: none;
-    }
+        /* Modal Specifics */
+        .modal-content {
+            border-radius: 18px;
+            border: none;
+        }
 
-    .step-badge {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        border: 1px solid #cbd5e1;
-        margin-right: 5px;
-        background: #f8fafc;
-        color: #64748b;
-    }
+        .step-badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            border: 1px solid #cbd5e1;
+            margin-right: 5px;
+            background: #f8fafc;
+            color: #64748b;
+        }
 
-    .step-badge.active {
-        border-color: #6366f1;
-        background: #6366f1;
-        color: white;
-    }
+        .step-badge.active {
+            border-color: #6366f1;
+            background: #6366f1;
+            color: white;
+        }
     </style>
 </head>
 
@@ -353,175 +353,175 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    const API_BASE = 'api.php'; // Ensure this matches your Sign Up API file
+        const API_BASE = 'api.php'; // Ensure this matches your Sign Up API file
 
-    // ===========================
-    // UI UTILITIES
-    // ===========================
-    function showAlert(elId, msg, type = 'danger') {
-        const el = document.getElementById(elId);
-        el.className = `alert alert-custom alert-${type}`;
-        el.textContent = msg;
-        el.classList.remove('d-none');
-    }
+        // ===========================
+        // UI UTILITIES
+        // ===========================
+        function showAlert(elId, msg, type = 'danger') {
+            const el = document.getElementById(elId);
+            el.className = `alert alert-custom alert-${type}`;
+            el.textContent = msg;
+            el.classList.remove('d-none');
+        }
 
-    function hideAlert(elId) {
-        document.getElementById(elId).classList.add('d-none');
-    }
+        function hideAlert(elId) {
+            document.getElementById(elId).classList.add('d-none');
+        }
 
-    // ===========================
-    // PASSWORD TOGGLE (FIXED)
-    // ===========================
-    document.getElementById('togglePasswordBtn').addEventListener('click', function() {
-        const input = document.getElementById('password');
-        const icon = document.getElementById('eyeIcon');
-        const isPassword = input.type === 'password';
+        // ===========================
+        // PASSWORD TOGGLE (FIXED)
+        // ===========================
+        document.getElementById('togglePasswordBtn').addEventListener('click', function () {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            const isPassword = input.type === 'password';
 
-        input.type = isPassword ? 'text' : 'password';
+            input.type = isPassword ? 'text' : 'password';
 
-        // SVG Path Swap
-        icon.innerHTML = isPassword ?
-            '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>' :
-            '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
-    });
+            // SVG Path Swap
+            icon.innerHTML = isPassword ?
+                '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>' :
+                '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+        });
 
-    // ===========================
-    // LOGIN LOGIC
-    // ===========================
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        hideAlert('loginAlert');
+        // ===========================
+        // LOGIN LOGIC
+        // ===========================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlert('loginAlert');
 
-        const loginId = document.getElementById('loginId').value.trim();
-        const password = document.getElementById('password').value;
-        const btn = document.getElementById('loginBtn');
-        const originalText = btn.textContent;
+            const loginId = document.getElementById('loginId').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const originalText = btn.textContent;
 
-        if (!loginId || !password) return;
+            if (!loginId || !password) return;
 
-        btn.disabled = true;
-        btn.textContent = 'Logging in...';
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
 
-        try {
-            const res = await fetch(API_BASE + '?action=login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    loginId,
-                    password
-                })
-            });
+            try {
+                const res = await fetch(API_BASE + '?action=login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        loginId,
+                        password
+                    })
+                });
 
-            const data = await res.json();
+                const data = await res.json();
 
-            if (data.success) {
-                showAlert('loginAlert', 'Success! Redirecting...', 'success');
-                localStorage.setItem('user', JSON.stringify(data.user));
-                setTimeout(() => window.location.href = 'dashboard.php', 1000);
-            } else {
-                showAlert('loginAlert', data.error || 'Invalid credentials');
+                if (data.success) {
+                    showAlert('loginAlert', 'Success! Redirecting...', 'success');
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+                } else {
+                    showAlert('loginAlert', data.error || 'Invalid credentials');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            } catch (error) {
+                showAlert('loginAlert', 'Connection error. Please try again.');
                 btn.disabled = false;
                 btn.textContent = originalText;
             }
-        } catch (error) {
-            showAlert('loginAlert', 'Connection error. Please try again.');
-            btn.disabled = false;
-            btn.textContent = originalText;
-        }
-    });
+        });
 
-    // ===========================
-    // FORGOT PASSWORD LOGIC
-    // ===========================
-    const step1 = document.getElementById('stepBadge1');
-    const step2 = document.getElementById('stepBadge2');
-    const step3 = document.getElementById('stepBadge3');
+        // ===========================
+        // FORGOT PASSWORD LOGIC
+        // ===========================
+        const step1 = document.getElementById('stepBadge1');
+        const step2 = document.getElementById('stepBadge2');
+        const step3 = document.getElementById('stepBadge3');
 
-    document.getElementById('sendOtpBtn').addEventListener('click', async function() {
-        const email = document.getElementById('resetEmail').value.trim();
-        if (!email) {
-            showAlert('forgotAlert', 'Please enter your email', 'warning');
-            return;
-        }
+        document.getElementById('sendOtpBtn').addEventListener('click', async function () {
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) {
+                showAlert('forgotAlert', 'Please enter your email', 'warning');
+                return;
+            }
 
-        this.disabled = true;
-        this.textContent = 'Sending...';
+            this.disabled = true;
+            this.textContent = 'Sending...';
 
-        try {
-            // 1. Check Email & Send OTP
-            const res = await fetch(API_BASE + '?action=send-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email
-                })
-            });
+            try {
+                // 1. Check Email & Send OTP
+                const res = await fetch(API_BASE + '?action=send-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email
+                    })
+                });
 
-            const data = await res.json();
+                const data = await res.json();
 
-            if (data.success) {
-                showAlert('forgotAlert', 'OTP sent to email!', 'success');
-                document.getElementById('otpSection').classList.remove('d-none');
-                step1.classList.remove('active');
-                step2.classList.add('active');
-                this.classList.add('d-none'); // Hide send button
-            } else {
-                showAlert('forgotAlert', data.error || 'Email not found');
+                if (data.success) {
+                    showAlert('forgotAlert', 'OTP sent to email!', 'success');
+                    document.getElementById('otpSection').classList.remove('d-none');
+                    step1.classList.remove('active');
+                    step2.classList.add('active');
+                    this.classList.add('d-none'); // Hide send button
+                } else {
+                    showAlert('forgotAlert', data.error || 'Email not found');
+                    this.disabled = false;
+                    this.textContent = 'Send OTP';
+                }
+            } catch (e) {
+                showAlert('forgotAlert', 'Error sending OTP');
                 this.disabled = false;
                 this.textContent = 'Send OTP';
             }
-        } catch (e) {
-            showAlert('forgotAlert', 'Error sending OTP');
-            this.disabled = false;
-            this.textContent = 'Send OTP';
-        }
-    });
+        });
 
-    document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('resetEmail').value;
-        const otp = document.getElementById('resetOtp').value;
-        const newPass = document.getElementById('newPassword').value;
-        const btn = document.getElementById('resetPasswordBtn');
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            const otp = document.getElementById('resetOtp').value;
+            const newPass = document.getElementById('newPassword').value;
+            const btn = document.getElementById('resetPasswordBtn');
 
-        btn.disabled = true;
-        btn.textContent = 'Updating...';
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
 
-        try {
-            const res = await fetch(API_BASE + '?action=reset-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email,
-                    otp,
-                    newPassword: newPass
-                })
-            });
+            try {
+                const res = await fetch(API_BASE + '?action=reset-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        otp,
+                        newPassword: newPass
+                    })
+                });
 
-            const data = await res.json();
+                const data = await res.json();
 
-            if (data.success) {
-                step2.classList.remove('active');
-                step3.classList.add('active');
-                showAlert('forgotAlert', 'Password updated! Login now.', 'success');
-                setTimeout(() => window.location.reload(), 1500);
-            } else {
-                showAlert('forgotAlert', data.error || 'Invalid OTP');
+                if (data.success) {
+                    step2.classList.remove('active');
+                    step3.classList.add('active');
+                    showAlert('forgotAlert', 'Password updated! Login now.', 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showAlert('forgotAlert', data.error || 'Invalid OTP');
+                    btn.disabled = false;
+                    btn.textContent = 'Reset Password';
+                }
+            } catch (e) {
+                showAlert('forgotAlert', 'Connection error');
                 btn.disabled = false;
                 btn.textContent = 'Reset Password';
             }
-        } catch (e) {
-            showAlert('forgotAlert', 'Connection error');
-            btn.disabled = false;
-            btn.textContent = 'Reset Password';
-        }
-    });
+        });
     </script>
 </body>
 
