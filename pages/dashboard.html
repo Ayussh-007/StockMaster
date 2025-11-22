@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StockMaster Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Custom Scrollbar for Webkit */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+
+      .sidebar-transition {
+        transition: transform 0.3s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden">
+    <!-- Mobile Overlay -->
+    <div
+      id="mobile-overlay"
+      onclick="toggleSidebar()"
+      class="fixed inset-0 bg-black/20 z-20 hidden lg:hidden"
+    ></div>
+
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 sidebar-transition flex flex-col h-full"
+    >
+      <!-- Logo -->
+      <div class="p-6 flex items-center border-b border-gray-100">
+        <div
+          class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3"
+        >
+          <i data-lucide="package" class="text-white w-5 h-5"></i>
+        </div>
+        <h1 class="text-xl font-bold text-gray-900 tracking-tight">
+          StockMaster
+        </h1>
+        <button
+          onclick="toggleSidebar()"
+          class="lg:hidden ml-auto text-gray-400"
+        >
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+        <div
+          class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-2"
+        >
+          Main Menu
+        </div>
+
+        <button
+          onclick="setActiveTab('Dashboard', this)"
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 bg-indigo-50 text-indigo-600 font-medium transition-colors"
+        >
+          <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+          Dashboard
+        </button>
+        <button
+          onclick="setActiveTab('Products', this)"
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="package" class="w-5 h-5 mr-3"></i>
+          Products
+        </button>
+
+        <div
+          class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
+        >
+          Operations
+        </div>
+
+        <button
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
+          Receipts
+        </button>
+        <button
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="truck" class="w-5 h-5 mr-3"></i>
+          Delivery Orders
+        </button>
+        <button
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i>
+          Inventory Adj.
+        </button>
+        <button
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i>
+          Move History
+        </button>
+
+        <div
+          class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
+        >
+          Configuration
+        </div>
+
+        <button
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="settings" class="w-5 h-5 mr-3"></i>
+          Settings
+        </button>
+        <button
+          class="nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+        >
+          <i data-lucide="archive" class="w-5 h-5 mr-3"></i>
+          Warehouse
+        </button>
+      </nav>
+
+      <!-- Profile -->
+      <div class="p-4 border-t border-gray-100">
+        <div
+          class="flex items-center p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors"
+        >
+          <div
+            class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold border-2 border-white shadow-sm"
+          >
+            A
+          </div>
+          <div class="ml-3 flex-1 overflow-hidden">
+            <p class="text-sm font-semibold text-gray-900 truncate">
+              Alex Manager
+            </p>
+            <p class="text-xs text-gray-500 truncate">Warehouse Admin</p>
+          </div>
+          <i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden w-full">
+      <!-- Header -->
+      <header
+        class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 lg:px-8 z-10 shrink-0"
+      >
+        <div class="flex items-center">
+          <button
+            onclick="toggleSidebar()"
+            class="mr-4 lg:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-lg"
+          >
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+          <h2
+            id="page-title"
+            class="text-lg font-semibold text-gray-800 hidden sm:block"
+          >
+            Dashboard Overview
+          </h2>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <div class="hidden md:flex relative">
+            <input
+              type="text"
+              placeholder="Search..."
+              class="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all w-64 outline-none"
+            />
+            <i
+              data-lucide="search"
+              class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"
+            ></i>
+          </div>
+          <button
+            class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors relative"
+          >
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span
+              class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"
+            ></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Dashboard Area -->
+      <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+        <div class="max-w-7xl mx-auto space-y-8">
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Card 1 -->
+            <div
+              class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="p-2 rounded-lg bg-blue-100 text-blue-600">
+                  <i data-lucide="package" class="w-5 h-5"></i>
+                </div>
+                <span
+                  class="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full"
+                  >Last 30d</span
+                >
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900">1,240</h3>
+              <p class="text-sm text-gray-500 mt-1">Total Products</p>
+            </div>
+            <!-- Card 2 -->
+            <div
+              class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="p-2 rounded-lg bg-red-100 text-red-600">
+                  <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900">12</h3>
+              <p class="text-sm text-gray-500 mt-1">Low Stock Alerts</p>
+            </div>
+            <!-- Card 3 -->
+            <div
+              class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="p-2 rounded-lg bg-emerald-100 text-emerald-600">
+                  <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900">4</h3>
+              <p class="text-sm text-gray-500 mt-1">Pending Receipts</p>
+            </div>
+            <!-- Card 4 -->
+            <div
+              class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="p-2 rounded-lg bg-orange-100 text-orange-600">
+                  <i data-lucide="truck" class="w-5 h-5"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900">8</h3>
+              <p class="text-sm text-gray-500 mt-1">Pending Deliveries</p>
+            </div>
+          </div>
+
+          <!-- Operation Cards (From Sketch) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Receipt Card -->
+            <div
+              class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group hover:shadow-md transition-shadow"
+            >
+              <div class="bg-indigo-600 h-2 w-full"></div>
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-8">
+                  <h3 class="text-xl font-bold text-gray-800">Receipts</h3>
+                  <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                    <i data-lucide="arrow-down-left" class="w-6 h-6"></i>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <button
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors font-semibold text-sm uppercase tracking-wide"
+                  >
+                    4 to receive
+                  </button>
+                  <div class="text-right space-y-1">
+                    <div
+                      class="text-sm font-medium text-orange-500 flex items-center justify-end"
+                    >
+                      <span
+                        class="w-2 h-2 bg-orange-500 rounded-full mr-2"
+                      ></span>
+                      1 Late
+                    </div>
+                    <div class="text-sm text-gray-500">6 Operations</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delivery Card -->
+            <div
+              class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group hover:shadow-md transition-shadow"
+            >
+              <div class="bg-emerald-500 h-2 w-full"></div>
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-8">
+                  <h3 class="text-xl font-bold text-gray-800">
+                    Delivery Orders
+                  </h3>
+                  <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                    <i data-lucide="truck" class="w-6 h-6"></i>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <button
+                    class="bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors font-semibold text-sm uppercase tracking-wide"
+                  >
+                    4 to deliver
+                  </button>
+                  <div class="text-right space-y-1">
+                    <div
+                      class="text-sm font-medium text-orange-500 flex items-center justify-end"
+                    >
+                      <span
+                        class="w-2 h-2 bg-orange-500 rounded-full mr-2"
+                      ></span>
+                      1 Late
+                    </div>
+                    <div
+                      class="text-sm font-medium text-blue-500 flex items-center justify-end"
+                    >
+                      <span
+                        class="w-2 h-2 bg-blue-500 rounded-full mr-2"
+                      ></span>
+                      2 Waiting
+                    </div>
+                    <div class="text-sm text-gray-500">6 Operations</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Operations Table -->
+          <div class="bg-white border border-gray-200 rounded-2xl shadow-sm">
+            <div
+              class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+            >
+              <h3 class="text-lg font-bold text-gray-800">Recent Operations</h3>
+
+              <!-- Filters -->
+              <div class="flex flex-wrap gap-2" id="filter-container">
+                <button
+                  onclick="filterTable('All', this)"
+                  class="filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-900 text-white shadow-md"
+                >
+                  All
+                </button>
+                <button
+                  onclick="filterTable('Receipt', this)"
+                  class="filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200"
+                >
+                  Receipts
+                </button>
+                <button
+                  onclick="filterTable('Delivery', this)"
+                  class="filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200"
+                >
+                  Delivery
+                </button>
+                <button
+                  onclick="filterTable('Ready', this)"
+                  class="filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200"
+                >
+                  Ready
+                </button>
+                <button
+                  onclick="filterTable('Waiting', this)"
+                  class="filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200"
+                >
+                  Waiting
+                </button>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-gray-600">
+                <thead
+                  class="bg-gray-50 text-gray-500 font-medium uppercase text-xs"
+                >
+                  <tr>
+                    <th class="p-4">Reference</th>
+                    <th class="p-4">Partner</th>
+                    <th class="p-4">Date</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4 text-right">Items</th>
+                  </tr>
+                </thead>
+                <tbody id="ops-body" class="divide-y divide-gray-100">
+                  <!-- Rows inserted via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl text-center"
+            >
+              <button
+                class="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+              >
+                View all operations
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      // Initialize Icons
+      lucide.createIcons();
+
+      // Sidebar Logic
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("mobile-overlay");
+
+        if (sidebar.classList.contains("-translate-x-full")) {
+          // Open
+          sidebar.classList.remove("-translate-x-full");
+          overlay.classList.remove("hidden");
+        } else {
+          // Close
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        }
+      }
+
+      function setActiveTab(tabName, element) {
+        document.getElementById("page-title").innerText = tabName + " Overview";
+
+        // Reset all nav items style
+        const items = document.querySelectorAll(".nav-item");
+        items.forEach((item) => {
+          item.className =
+            "nav-item w-full flex items-center p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors";
+        });
+
+        // Set active style
+        element.className =
+          "nav-item w-full flex items-center p-3 rounded-lg mb-1 bg-indigo-50 text-indigo-600 font-medium transition-colors";
+
+        // On mobile, close sidebar after selection
+        if (window.innerWidth < 1024) {
+          toggleSidebar();
+        }
+      }
+
+      // Data & Filter Logic
+      const operationsData = [
+        {
+          id: "WH/IN/001",
+          type: "Receipt",
+          partner: "Azure Interior",
+          status: "Ready",
+          date: "Today",
+          items: 15,
+        },
+        {
+          id: "WH/OUT/004",
+          type: "Delivery",
+          partner: "Gemini Furniture",
+          status: "Waiting",
+          date: "Tomorrow",
+          items: 3,
+        },
+        {
+          id: "WH/INT/002",
+          type: "Internal",
+          partner: "Warehouse A -> B",
+          status: "Done",
+          date: "Yesterday",
+          items: 50,
+        },
+        {
+          id: "WH/IN/003",
+          type: "Receipt",
+          partner: "Deco Addict",
+          status: "Late",
+          date: "2 days ago",
+          items: 8,
+        },
+        {
+          id: "WH/OUT/005",
+          type: "Delivery",
+          partner: "Ready Mat",
+          status: "Ready",
+          date: "Today",
+          items: 12,
+        },
+      ];
+
+      function getStatusBadge(status) {
+        const styles = {
+          Ready: "bg-blue-100 text-blue-700",
+          Waiting: "bg-yellow-100 text-yellow-700",
+          Done: "bg-gray-100 text-gray-700",
+          Late: "bg-red-100 text-red-700",
+        };
+        const style = styles[status] || "bg-gray-100 text-gray-700";
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${style}">${status}</span>`;
+      }
+
+      function renderTable(data) {
+        const tbody = document.getElementById("ops-body");
+        tbody.innerHTML = "";
+
+        if (data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">No operations found.</td></tr>`;
+          return;
+        }
+
+        data.forEach((op) => {
+          const row = `
+                    <tr class="hover:bg-gray-50 transition-colors cursor-pointer group">
+                        <td class="p-4 font-medium text-indigo-600 group-hover:text-indigo-700">
+                            ${op.id}
+                            <div class="text-xs text-gray-400 font-normal mt-0.5">${
+                              op.type
+                            }</div>
+                        </td>
+                        <td class="p-4 text-gray-900 font-medium">${
+                          op.partner
+                        }</td>
+                        <td class="p-4">${op.date}</td>
+                        <td class="p-4">${getStatusBadge(op.status)}</td>
+                        <td class="p-4 text-right font-medium">${op.items}</td>
+                    </tr>
+                `;
+          tbody.innerHTML += row;
+        });
+      }
+
+      function filterTable(filterType, btn) {
+        // Update Button Styles
+        const buttons = document.querySelectorAll(".filter-btn");
+        buttons.forEach((b) => {
+          b.className =
+            "filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200";
+        });
+        btn.className =
+          "filter-btn px-4 py-1.5 text-sm font-medium rounded-full transition-colors bg-gray-900 text-white shadow-md";
+
+        // Filter Data
+        if (filterType === "All") {
+          renderTable(operationsData);
+        } else {
+          const filtered = operationsData.filter(
+            (op) => op.status === filterType || op.type === filterType
+          );
+          renderTable(filtered);
+        }
+      }
+
+      // Initial Render
+      renderTable(operationsData);
+    </script>
+  </body>
+</html>
