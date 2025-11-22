@@ -1,9 +1,52 @@
+<?php
+// ---------- DB CONNECTION ----------
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "stock_master";
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+// ---------- HANDLE NEW DELIVERY SUBMISSION ----------
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create_delivery"])) {
+  $customer      = trim($_POST["customer"] ?? "");
+  $delivery_date = $_POST["delivery_date"] ?? "";
+  $priority      = trim($_POST["priority"] ?? "Normal");
+  // Status is not in the UI; default to Ready
+  $status        = "Ready";
+
+  if ($customer !== "" && $delivery_date !== "") {
+    $stmt = $conn->prepare(
+      "INSERT INTO delivery (customer, delivery_date, priority, status)
+       VALUES (?, ?, ?, ?)"
+    );
+    $stmt->bind_param("ssss", $customer, $delivery_date, $priority, $status);
+    $stmt->execute();
+    $stmt->close();
+  }
+
+  header("Location: delivery.php");
+  exit;
+}
+
+// ---------- FETCH DELIVERY ORDERS ----------
+$deliveries = [];
+$result = $conn->query("SELECT * FROM delivery ORDER BY id DESC");
+if ($result && $result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    $deliveries[] = $row;
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StockMaster - Inventory Adjustments</title>
+    <title>StockMaster - Delivery Orders</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link
@@ -61,8 +104,7 @@
         </div>
         <h2 class="text-2xl font-bold text-gray-900 mb-3">Access Restricted</h2>
         <p class="text-gray-500 mb-8 leading-relaxed">
-          Please log in to your StockMaster account to manage inventory
-          adjustments.
+          Please log in to your StockMaster account to manage delivery orders.
         </p>
         <div class="space-y-3">
           <a
@@ -85,7 +127,7 @@
       class="fixed inset-0 bg-black/20 z-20 hidden lg:hidden"
     ></div>
 
-    <!-- Start Inventory Modal -->
+    <!-- Create Delivery Modal -->
     <div
       id="create-modal"
       class="fixed inset-0 z-50 flex items-center justify-center hidden modal"
@@ -100,7 +142,7 @@
         <div
           class="p-6 border-b border-gray-100 flex justify-between items-center"
         >
-          <h3 class="text-xl font-bold text-gray-900">Start Inventory Count</h3>
+          <h3 class="text-xl font-bold text-gray-900">Create Delivery Order</h3>
           <button
             onclick="toggleModal()"
             class="text-gray-400 hover:text-gray-600"
@@ -109,97 +151,65 @@
           </button>
         </div>
         <div class="p-6 overflow-y-auto">
-          <form class="space-y-6">
-            <div class="grid grid-cols-1 gap-6">
-              <div>
+          <form class="space-y-6" method="POST" action="delivery.php">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Inventory Reference</label
-                >
-                <input
-                  type="text"
-                  placeholder="e.g. INV/2023/Annual"
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Location</label
+                  >Customer</label
                 >
                 <select
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
+                  name="customer"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                  required
                 >
-                  <option>WH/Stock</option>
-                  <option>WH/Stock/Shelf 1</option>
-                  <option>WH/Stock/Shelf 2</option>
+                  <option value="Deco Addict">Deco Addict</option>
+                  <option value="Azure Interior">Azure Interior</option>
+                  <option value="Gemini Furniture">Gemini Furniture</option>
                 </select>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Products</label
-                >
-                <div class="space-y-2">
-                  <label
-                    class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50"
-                  >
-                    <input
-                      type="radio"
-                      name="product_scope"
-                      class="text-purple-600 focus:ring-purple-500"
-                      checked
-                    />
-                    <span class="text-sm text-gray-700">All Products</span>
-                  </label>
-                  <label
-                    class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50"
-                  >
-                    <input
-                      type="radio"
-                      name="product_scope"
-                      class="text-purple-600 focus:ring-purple-500"
-                    />
-                    <span class="text-sm text-gray-700">Select Category</span>
-                  </label>
-                  <label
-                    class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50"
-                  >
-                    <input
-                      type="radio"
-                      name="product_scope"
-                      class="text-purple-600 focus:ring-purple-500"
-                    />
-                    <span class="text-sm text-gray-700"
-                      >Select One Product</span
-                    >
-                  </label>
-                </div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Count Date</label
+                  >Scheduled Date</label
                 >
                 <input
                   type="date"
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
+                  name="delivery_date"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                  required
                 />
               </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Priority</label
+                >
+                <select
+                  name="priority"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                >
+                  <option value="Normal">Normal</option>
+                  <option value="Urgent">Urgent</option>
+                </select>
+              </div>
+            </div>
+            <div
+              class="pt-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end space-x-3 -mx-6 -mb-6 px-6 pb-6"
+            >
+              <button
+                type="button"
+                onclick="toggleModal()"
+                class="px-6 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                name="create_delivery"
+                class="px-6 py-2.5 text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg shadow-lg shadow-emerald-200 transition-colors"
+              >
+                Create Delivery
+              </button>
             </div>
           </form>
-        </div>
-        <div
-          class="p-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end space-x-3"
-        >
-          <button
-            onclick="toggleModal()"
-            class="px-6 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onclick="toggleModal()"
-            class="px-6 py-2.5 text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 rounded-lg shadow-lg shadow-purple-200 transition-colors"
-          >
-            Start Inventory
-          </button>
         </div>
       </div>
     </div>
@@ -239,7 +249,7 @@
           Dashboard</a
         >
         <a
-          href="products.html"
+          href="products.php"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           ><i data-lucide="package" class="w-5 h-5 mr-3"></i> Products</a
         >
@@ -250,19 +260,19 @@
           Operations
         </div>
         <a
-          href="receipts.html"
+          href="receipts.php"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           ><i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
           Receipts</a
         >
         <a
-          href="delivery.html"
-          class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          href="delivery.php"
+          class="flex items-center w-full p-3 rounded-lg mb-1 bg-emerald-50 text-emerald-600 font-medium transition-colors"
           ><i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders</a
         >
         <a
           href="inventoryadj.html"
-          class="flex items-center w-full p-3 rounded-lg mb-1 bg-purple-50 text-purple-600 font-medium transition-colors"
+          class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           ><i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i> Inventory
           Adj.</a
         >
@@ -285,7 +295,7 @@
         >
       </nav>
 
-      <!-- Bottom profile (dynamic login ID) -->
+      <!-- Bottom profile with dynamic Login ID -->
       <div class="p-4 border-t border-gray-100 relative">
         <!-- Logged-in state -->
         <div id="user-profile" class="hidden">
@@ -356,19 +366,19 @@
           </button>
           <div>
             <h2 class="text-lg font-semibold text-gray-800 hidden sm:block">
-              Inventory Adjustments
+              Delivery Orders
             </h2>
             <p class="text-xs text-gray-500 hidden sm:block">
-              Stock Corrections & Counts
+              Outgoing Stock Operations
             </p>
           </div>
         </div>
         <div class="flex items-center space-x-4">
           <button
             onclick="toggleModal()"
-            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center"
           >
-            <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Create Adjustment
+            <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Create Delivery
           </button>
         </div>
       </header>
@@ -379,22 +389,16 @@
             class="flex flex-col sm:flex-row gap-4 mb-6 overflow-x-auto pb-2"
           >
             <div
-              class="bg-white border-l-4 border-purple-500 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
+              class="bg-white border-l-4 border-emerald-500 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
             >
-              <div class="text-sm text-gray-500 mb-1">In Progress</div>
-              <div class="text-2xl font-bold text-gray-900">2</div>
+              <div class="text-sm text-gray-500 mb-1">To Deliver</div>
+              <div class="text-2xl font-bold text-gray-900">4</div>
             </div>
             <div
-              class="bg-white border-l-4 border-gray-300 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
+              class="bg-white border-l-4 border-orange-500 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
             >
-              <div class="text-sm text-gray-500 mb-1">Draft</div>
-              <div class="text-2xl font-bold text-gray-600">1</div>
-            </div>
-            <div
-              class="bg-white border-l-4 border-green-500 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
-            >
-              <div class="text-sm text-gray-500 mb-1">Validated (Last 30d)</div>
-              <div class="text-2xl font-bold text-green-600">5</div>
+              <div class="text-sm text-gray-500 mb-1">Late</div>
+              <div class="text-2xl font-bold text-orange-600">1</div>
             </div>
           </div>
 
@@ -411,63 +415,67 @@
                       <input type="checkbox" class="rounded border-gray-300" />
                     </th>
                     <th class="p-4">Reference</th>
-                    <th class="p-4">Location</th>
+                    <th class="p-4">Customer</th>
+                    <th class="p-4">Date</th>
                     <th class="p-4">Status</th>
-                    <th class="p-4">Count Date</th>
                     <th class="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer"
-                  >
-                    <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </td>
-                    <td class="p-4 font-medium text-purple-600">
-                      INV/2023/001
-                    </td>
-                    <td class="p-4 text-gray-900">WH/Stock</td>
-                    <td class="p-4">
-                      <span
-                        class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700"
-                        >In Progress</span
-                      >
-                    </td>
-                    <td class="p-4">Today</td>
-                    <td class="p-4 text-right">
-                      <button
-                        class="text-purple-600 font-medium text-xs px-3 py-1 border border-purple-200 rounded-md bg-purple-50"
-                      >
-                        Continue
-                      </button>
-                    </td>
-                  </tr>
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer"
-                  >
-                    <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </td>
-                    <td class="p-4 font-medium text-purple-600">
-                      INV/2023/002
-                    </td>
-                    <td class="p-4 text-gray-900">WH/Stock/Shelf 1</td>
-                    <td class="p-4">
-                      <span
-                        class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
-                        >Draft</span
-                      >
-                    </td>
-                    <td class="p-4">Tomorrow</td>
-                    <td class="p-4 text-right">
-                      <button
-                        class="text-gray-600 font-medium text-xs px-3 py-1 border border-gray-200 rounded-md hover:bg-gray-50"
-                      >
-                        Start
-                      </button>
-                    </td>
-                  </tr>
+                  <?php if (!empty($deliveries)): ?>
+                    <?php foreach ($deliveries as $del): ?>
+                      <?php
+                        $id       = (int)$del["id"];
+                        // Generate reference like WH/OUT/00054
+                        $reference = "WH/OUT/" . str_pad($id, 5, "0", STR_PAD_LEFT);
+                        $customer  = htmlspecialchars($del["customer"]);
+                        $date      = $del["delivery_date"];
+                        $dateFormatted = $date ? date("M j, Y", strtotime($date)) : "";
+                        $status    = htmlspecialchars($del["status"]);
+                        $priority  = htmlspecialchars($del["priority"]);
+
+                        // Status pill color (Ready green, others default)
+                        $statusClass = "bg-emerald-100 text-emerald-700";
+                        if (strtolower($status) !== "ready") {
+                          $statusClass = "bg-gray-100 text-gray-700";
+                        }
+                      ?>
+                      <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                        <td class="p-4">
+                          <input type="checkbox" class="rounded border-gray-300" />
+                        </td>
+                        <td class="p-4 font-medium text-indigo-600">
+                          <?php echo $reference; ?>
+                        </td>
+                        <td class="p-4">
+                          <?php echo $customer; ?>
+                        </td>
+                        <td class="p-4">
+                          <?php echo $dateFormatted; ?>
+                        </td>
+                        <td class="p-4">
+                          <span
+                            class="px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $statusClass; ?>"
+                          >
+                            <?php echo $status; ?>
+                          </span>
+                        </td>
+                        <td class="p-4 text-right">
+                          <button
+                            class="text-emerald-600 font-medium text-xs px-3 py-1 border border-emerald-200 rounded-md bg-emerald-50"
+                          >
+                            Validate
+                          </button>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="6" class="p-4 text-center text-gray-500">
+                        No delivery orders found. Click "Create Delivery" to add one.
+                      </td>
+                    </tr>
+                  <?php endif; ?>
                 </tbody>
               </table>
             </div>
@@ -479,6 +487,7 @@
     <script>
       lucide.createIcons();
 
+      // Read login state
       let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
       function updateUserUI() {
@@ -533,7 +542,11 @@
         document.getElementById("create-modal").classList.toggle("hidden");
       }
 
+      // Init
       checkLoginState();
     </script>
   </body>
 </html>
+<?php
+$conn->close();
+?>

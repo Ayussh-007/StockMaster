@@ -1,3 +1,53 @@
+<?php
+// ---------- DB CONNECTION ----------
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "stock_master";
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+// ---------- HANDLE NEW RECEIPT SUBMISSION ----------
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create_receipt"])) {
+  $reference_code  = trim($_POST["reference_code"] ?? "");
+  $vendor          = trim($_POST["vendor"] ?? "");
+  $scheduled_date  = $_POST["scheduled_date"] ?? "";
+  $source_document = trim($_POST["source_document"] ?? "");
+  $status          = trim($_POST["status"] ?? "Ready");
+
+  if ($reference_code !== "" && $vendor !== "" && $scheduled_date !== "") {
+    $stmt = $conn->prepare(
+      "INSERT INTO receipts (reference_code, vendor, scheduled_date, source_document, status)
+       VALUES (?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param(
+      "sssss",
+      $reference_code,
+      $vendor,
+      $scheduled_date,
+      $source_document,
+      $status
+    );
+    $stmt->execute();
+    $stmt->close();
+  }
+
+  header("Location: receipts.php");
+  exit;
+}
+
+// ---------- FETCH RECEIPTS ----------
+$receipts = [];
+$result = $conn->query("SELECT * FROM receipts ORDER BY id DESC");
+if ($result && $result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    $receipts[] = $row;
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,6 +88,19 @@
       .sidebar-transition {
         transition: transform 0.3s ease-in-out;
       }
+      .modal {
+        transition: opacity 0.25s ease;
+      }
+      .modal-content {
+        transition: transform 0.25s ease;
+      }
+      .modal.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .modal.hidden .modal-content {
+        transform: scale(0.95);
+      }
     </style>
   </head>
   <body class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden">
@@ -47,6 +110,117 @@
       onclick="toggleSidebar()"
       class="fixed inset-0 bg-black/20 z-20 hidden lg:hidden"
     ></div>
+
+    <!-- Create Receipt Modal -->
+    <div
+      id="create-modal"
+      class="fixed inset-0 z-50 flex items-center justify-center hidden modal"
+    >
+      <div
+        class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onclick="toggleModal()"
+      ></div>
+      <div
+        class="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative z-10 m-4 modal-content flex flex-col max-h-[90vh]"
+      >
+        <div
+          class="p-6 border-b border-gray-100 flex justify-between items-center"
+        >
+          <h3 class="text-xl font-bold text-gray-900">Create Receipt</h3>
+          <button
+            onclick="toggleModal()"
+            class="text-gray-400 hover:text-gray-600"
+          >
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto">
+          <form class="space-y-6" method="POST" action="receipts.php">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Reference</label
+                >
+                <input
+                  type="text"
+                  name="reference_code"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="e.g. WH/IN/00017"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Vendor</label
+                >
+                <input
+                  type="text"
+                  name="vendor"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="e.g. Azure Interior"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Scheduled Date</label
+                >
+                <input
+                  type="date"
+                  name="scheduled_date"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Source Document</label
+                >
+                <input
+                  type="text"
+                  name="source_document"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="e.g. PO00020"
+                />
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Status</label
+                >
+                <select
+                  name="status"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                >
+                  <option value="Ready">Ready</option>
+                  <option value="Waiting">Waiting</option>
+                  <option value="Done">Done</option>
+                </select>
+              </div>
+            </div>
+
+            <div
+              class="pt-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end space-x-3 -mx-6 -mb-6 px-6 pb-6"
+            >
+              <button
+                type="button"
+                onclick="toggleModal()"
+                class="px-6 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                name="create_receipt"
+                class="px-6 py-2.5 text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg shadow-lg shadow-indigo-200 transition-colors"
+              >
+                Save Receipt
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
     <!-- Sidebar -->
     <aside
@@ -85,7 +259,7 @@
           Dashboard
         </a>
         <a
-          href="products.html"
+          href="products.php"
           data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
         >
@@ -101,7 +275,7 @@
 
         <!-- Active Receipts Link -->
         <a
-          href="receipts.html"
+          href="receipts.php"
           data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 bg-indigo-50 text-indigo-600 font-medium transition-colors"
         >
@@ -148,7 +322,7 @@
         </a>
       </nav>
 
-      <!-- Bottom profile section (same pattern as dashboard/products) -->
+      <!-- Bottom profile section -->
       <div class="p-4 border-t border-gray-100 relative">
         <!-- User Profile (Visible if Logged In) -->
         <div id="user-profile" class="hidden">
@@ -192,7 +366,7 @@
           </div>
         </div>
 
-        <!-- Guest Profile (Visible if Logged Out, but this page redirects anyway) -->
+        <!-- Guest Profile -->
         <div id="guest-profile" class="hidden">
           <div class="p-3 bg-gray-50 rounded-xl text-center space-y-3">
             <p class="text-sm text-gray-500 mb-2">Welcome to StockMaster</p>
@@ -236,6 +410,7 @@
 
         <div class="flex items-center space-x-4">
           <button
+            onclick="toggleModal()"
             class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center"
           >
             <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
@@ -247,7 +422,7 @@
       <!-- Main Area -->
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
         <div class="max-w-7xl mx-auto">
-          <!-- Stats / Kanban Status -->
+          <!-- Stats / Kanban Status (left static for now) -->
           <div
             class="flex flex-col sm:flex-row gap-4 mb-6 overflow-x-auto pb-2"
           >
@@ -277,7 +452,7 @@
             </div>
           </div>
 
-          <!-- Filters & Search -->
+          <!-- Filters & Search (UI only, no DB filter yet) -->
           <div
             class="bg-white border border-gray-200 rounded-2xl shadow-sm mb-6"
           >
@@ -349,106 +524,66 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                  <!-- Item 1 -->
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer"
-                  >
-                    <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </td>
-                    <td class="p-4 font-medium text-indigo-600">WH/IN/00014</td>
-                    <td class="p-4 text-gray-900">Azure Interior</td>
-                    <td class="p-4 text-red-600 font-medium">Yesterday</td>
-                    <td class="p-4 text-gray-500">PO00012</td>
-                    <td class="p-4">
-                      <span
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700"
+                  <?php if (!empty($receipts)): ?>
+                    <?php foreach ($receipts as $receipt): ?>
+                      <?php
+                        $ref   = htmlspecialchars($receipt["reference_code"]);
+                        $vend  = htmlspecialchars($receipt["vendor"]);
+                        $src   = htmlspecialchars($receipt["source_document"]);
+                        $stat  = htmlspecialchars($receipt["status"]);
+                        $date  = $receipt["scheduled_date"];
+                        $dateFormatted = $date ? date("M j, Y", strtotime($date)) : "";
+
+                        $statusClass = "bg-gray-200 text-gray-700";
+                        if (strtolower($stat) === "ready") {
+                          $statusClass = "bg-blue-100 text-blue-700";
+                        } elseif (strtolower($stat) === "waiting") {
+                          $statusClass = "bg-yellow-100 text-yellow-700";
+                        } elseif (strtolower($stat) === "done") {
+                          $statusClass = "bg-gray-200 text-gray-700";
+                        }
+                      ?>
+                      <tr
+                        class="hover:bg-gray-50 transition-colors group cursor-pointer"
                       >
-                        Ready
-                      </span>
-                    </td>
-                    <td class="p-4 text-right">
-                      <button
-                        class="text-indigo-600 hover:text-indigo-800 font-medium text-xs px-3 py-1 border border-indigo-200 rounded-md bg-indigo-50 hover:bg-indigo-100"
-                      >
-                        Validate
-                      </button>
-                    </td>
-                  </tr>
-                  <!-- Item 2 -->
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer"
-                  >
-                    <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </td>
-                    <td class="p-4 font-medium text-indigo-600">WH/IN/00015</td>
-                    <td class="p-4 text-gray-900">Deco Addict</td>
-                    <td class="p-4">Today</td>
-                    <td class="p-4 text-gray-500">PO00014</td>
-                    <td class="p-4">
-                      <span
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700"
-                      >
-                        Ready
-                      </span>
-                    </td>
-                    <td class="p-4 text-right">
-                      <button
-                        class="text-indigo-600 hover:text-indigo-800 font-medium text-xs px-3 py-1 border border-indigo-200 rounded-md bg-indigo-50 hover:bg-indigo-100"
-                      >
-                        Validate
-                      </button>
-                    </td>
-                  </tr>
-                  <!-- Item 3 -->
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer"
-                  >
-                    <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </td>
-                    <td class="p-4 font-medium text-indigo-600">WH/IN/00016</td>
-                    <td class="p-4 text-gray-900">Gemini Furniture</td>
-                    <td class="p-4">Tomorrow</td>
-                    <td class="p-4 text-gray-500">PO00018</td>
-                    <td class="p-4">
-                      <span
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700"
-                      >
-                        Waiting
-                      </span>
-                    </td>
-                    <td class="p-4 text-right">
-                      <button class="text-gray-400 hover:text-gray-600">
-                        <i data-lucide="more-horizontal" class="w-5 h-5"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <!-- Item 4 -->
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer bg-gray-50/50 opacity-60"
-                  >
-                    <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </td>
-                    <td class="p-4 font-medium text-gray-600">WH/IN/00010</td>
-                    <td class="p-4 text-gray-900">Ready Mat</td>
-                    <td class="p-4">Oct 24, 2023</td>
-                    <td class="p-4 text-gray-500">PO00009</td>
-                    <td class="p-4">
-                      <span
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700"
-                      >
-                        Done
-                      </span>
-                    </td>
-                    <td class="p-4 text-right">
-                      <button class="text-gray-400 hover:text-gray-600">
-                        <i data-lucide="more-horizontal" class="w-5 h-5"></i>
-                      </button>
-                    </td>
-                  </tr>
+                        <td class="p-4">
+                          <input type="checkbox" class="rounded border-gray-300" />
+                        </td>
+                        <td class="p-4 font-medium text-indigo-600">
+                          <?php echo $ref; ?>
+                        </td>
+                        <td class="p-4 text-gray-900">
+                          <?php echo $vend; ?>
+                        </td>
+                        <td class="p-4">
+                          <?php echo $dateFormatted; ?>
+                        </td>
+                        <td class="p-4 text-gray-500">
+                          <?php echo $src; ?>
+                        </td>
+                        <td class="p-4">
+                          <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $statusClass; ?>"
+                          >
+                            <?php echo $stat; ?>
+                          </span>
+                        </td>
+                        <td class="p-4 text-right">
+                          <button
+                            class="text-indigo-600 hover:text-indigo-800 font-medium text-xs px-3 py-1 border border-indigo-200 rounded-md bg-indigo-50 hover:bg-indigo-100"
+                          >
+                            Validate
+                          </button>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="7" class="p-4 text-center text-gray-500">
+                        No receipts found. Click "Create Receipt" to add one.
+                      </td>
+                    </tr>
+                  <?php endif; ?>
                 </tbody>
               </table>
             </div>
@@ -458,7 +593,7 @@
               class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between"
             >
               <span class="text-xs text-gray-500"
-                >Showing 1-4 of 12 operations</span
+                >Showing <?php echo count($receipts); ?> operation(s)</span
               >
               <div class="flex space-x-2">
                 <button
@@ -552,9 +687,21 @@
         }
       }
 
+      function toggleModal() {
+        const modal = document.getElementById("create-modal");
+        if (modal.classList.contains("hidden")) {
+          modal.classList.remove("hidden");
+        } else {
+          modal.classList.add("hidden");
+        }
+      }
+
       // Init
       setupProtectedLinks();
       checkLoginState();
     </script>
   </body>
 </html>
+<?php
+$conn->close();
+?>

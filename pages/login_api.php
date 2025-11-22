@@ -155,7 +155,6 @@ if ($action === 'send-otp') {
     // ============================================
     // SEND EMAIL WITH OTP USING PHPMailer (SMTP)
     // ============================================
-<<<<<<< HEAD
     $mail = new PHPMailer(true);
 
     try {
@@ -214,46 +213,6 @@ if ($action === 'send-otp') {
         // For debugging (temporarily): echo $mail->ErrorInfo;
         exit;
     }
-=======
-    $to = $email;
-    $subject = "Password Reset OTP - Stock Market";
-    $message = "
-    <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif; }
-            .container { padding: 20px; background: #f8f9fa; border-radius: 10px; }
-            .otp { font-size: 32px; font-weight: bold; color: #f59e0b; letter-spacing: 5px; }
-            .note { color: #666; font-size: 14px; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <h2>Password Reset Request</h2>
-            <p>Your OTP for password reset is:</p>
-            <p class='otp'>$otp</p>
-            <p class='note'>This OTP is valid for 10 minutes.</p>
-            <p class='note'>If you did not request this, please ignore this email.</p>
-        </div>
-    </body>
-    </html>
-    ";
-
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: noreply@stockmarket.com\r\n";
-    
-    // Try to send email
-    $emailSent = @mail($to, $subject, $message, $headers);
-    
-    // For hackathon/testing: Return OTP in response (REMOVE IN PRODUCTION!)
-    echo json_encode([
-        'success' => true,
-        'message' => 'OTP sent to your email',
-        'debug_otp' => $otp  // REMOVE THIS LINE IN PRODUCTION!
-    ]);
-    exit;
->>>>>>> ff57bdd95be8e6060b5d74fbd16f209fafeb94de
 }
 
 
