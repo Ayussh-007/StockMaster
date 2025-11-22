@@ -4,12 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StockMaster - Products</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -25,9 +32,14 @@
         background: #cbd5e1;
         border-radius: 3px;
       }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
       .sidebar-transition {
         transition: transform 0.3s ease-in-out;
       }
+
+      /* Modal Animation */
       .modal {
         transition: opacity 0.25s ease;
       }
@@ -43,44 +55,8 @@
       }
     </style>
   </head>
-  <body
-    class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden relative"
-  >
-    <!-- Auth Overlay (Blocker) -->
-    <div
-      id="auth-overlay"
-      class="fixed inset-0 z-[60] bg-gray-900/60 backdrop-blur-md hidden flex items-center justify-center transition-opacity duration-300"
-    >
-      <div
-        class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full text-center mx-4 transform scale-100 transition-transform"
-      >
-        <div
-          class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"
-        >
-          <i data-lucide="lock" class="w-10 h-10"></i>
-        </div>
-        <h2 class="text-2xl font-bold text-gray-900 mb-3">Access Restricted</h2>
-        <p class="text-gray-500 mb-8 leading-relaxed">
-          Please log in to your StockMaster account to manage products.
-        </p>
-        <div class="space-y-3">
-          <a
-            href="login.php"
-            class="flex items-center justify-center w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 transform hover:-translate-y-0.5"
-            >Log In</a
-          >
-          <a
-            href="signup.php"
-            class="flex items-center justify-center w-full py-3.5 bg-white border-2 border-gray-100 text-gray-700 rounded-xl font-semibold hover:border-gray-300 hover:bg-gray-50 transition-all"
-            >Create Account</a
-          >
-        </div>
-      </div>
-    </div>
-
-    <!-- ... Rest of content identical to previous Products file ... -->
-    <!-- Create Product Modal, Sidebar, Main Content ... -->
-
+  <body class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden">
+    <!-- Mobile Overlay -->
     <div
       id="mobile-overlay"
       onclick="toggleSidebar()"
@@ -99,6 +75,7 @@
       <div
         class="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative z-10 m-4 modal-content flex flex-col max-h-[90vh]"
       >
+        <!-- Modal Header -->
         <div
           class="p-6 border-b border-gray-100 flex justify-between items-center"
         >
@@ -110,9 +87,10 @@
             <i data-lucide="x" class="w-6 h-6"></i>
           </button>
         </div>
+
+        <!-- Modal Body -->
         <div class="p-6 overflow-y-auto">
           <form class="space-y-6">
-            <!-- Form Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2"
@@ -120,30 +98,80 @@
                 >
                 <input
                   type="text"
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition-all"
+                  placeholder="e.g. Office Chair"
                 />
               </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Product Type</label
+                >
+                <select
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                >
+                  <option>Storable Product</option>
+                  <option>Consumable</option>
+                  <option>Service</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Internal Reference</label
+                >
+                <input
+                  type="text"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="e.g. FUR-001"
+                />
+              </div>
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
                   >Sales Price</label
                 >
-                <input
-                  type="number"
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-                />
+                <div class="relative">
+                  <span class="absolute left-3 top-3 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    class="w-full pl-8 p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    placeholder="0.00"
+                  />
+                </div>
               </div>
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
                   >Cost</label
                 >
-                <input
-                  type="number"
+                <div class="relative">
+                  <span class="absolute left-3 top-3 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    class="w-full pl-8 p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+
+              <div class="col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Category</label
+                >
+                <select
                   class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-                />
+                >
+                  <option>All / Furniture</option>
+                  <option>All / Electronics</option>
+                  <option>All / Office Supplies</option>
+                </select>
               </div>
             </div>
           </form>
         </div>
+
+        <!-- Modal Footer -->
         <div
           class="p-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end space-x-3"
         >
@@ -163,10 +191,12 @@
       </div>
     </div>
 
+    <!-- Sidebar -->
     <aside
       id="sidebar"
       class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 sidebar-transition flex flex-col h-full"
     >
+      <!-- Logo -->
       <div class="p-6 flex items-center border-b border-gray-100">
         <div
           class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3"
@@ -183,63 +213,90 @@
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
+
+      <!-- Nav Links -->
       <nav class="flex-1 overflow-y-auto p-4 space-y-1">
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-2"
         >
           Main Menu
         </div>
+
         <a
           href="dashboard.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
-          Dashboard</a
         >
+          <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+          Dashboard
+        </a>
+
         <a
           href="products.html"
+          data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 bg-indigo-50 text-indigo-600 font-medium transition-colors"
-          ><i data-lucide="package" class="w-5 h-5 mr-3"></i> Products</a
         >
+          <i data-lucide="package" class="w-5 h-5 mr-3"></i>
+          Products
+        </a>
+
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
         >
           Operations
         </div>
+
         <a
           href="receipts.html"
+          data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
-          Receipts</a
         >
+          <i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
+          Receipts
+        </a>
         <a
           href="delivery.html"
+          data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders</a
         >
+          <i data-lucide="truck" class="w-5 h-5 mr-3"></i>
+          Delivery Orders
+        </a>
         <a
           href="inventoryadj.html"
+          data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i> Inventory
-          Adj.</a
         >
+          <i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i>
+          Inventory Adj.
+        </a>
         <a
           href="movehistory.html"
+          data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i> Move
-          History</a
         >
+          <i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i>
+          Move History
+        </a>
+
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
         >
           Configuration
         </div>
+
         <a
           href="settings.html"
+          data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          ><i data-lucide="settings" class="w-5 h-5 mr-3"></i> Settings</a
         >
+          <i data-lucide="settings" class="w-5 h-5 mr-3"></i>
+          Settings
+        </a>
       </nav>
+
+      <!-- Bottom Profile Area (same pattern as dashboard) -->
       <div class="p-4 border-t border-gray-100 relative">
+        <!-- User Profile (Visible if Logged In) -->
         <div id="user-profile" class="hidden">
           <button
             onclick="toggleProfileMenu()"
@@ -248,13 +305,16 @@
             <div
               class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold border-2 border-white shadow-sm"
             >
-              A
+              <span id="user-avatar-text">U</span>
             </div>
             <div class="ml-3 flex-1 overflow-hidden">
-              <p class="text-sm font-semibold text-gray-900 truncate">
-                Alex Manager
+              <p class="text-xs text-gray-500 truncate">Logged in as</p>
+              <p
+                id="user-login-id"
+                class="text-sm font-semibold text-gray-900 truncate"
+              >
+                User
               </p>
-              <p class="text-xs text-gray-500 truncate">Warehouse Admin</p>
             </div>
             <i data-lucide="chevron-up" class="w-4 h-4 text-gray-400"></i>
           </button>
@@ -265,8 +325,9 @@
             <a
               href="#"
               class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex items-center"
-              ><i data-lucide="user" class="w-4 h-4 mr-2"></i> My Profile</a
             >
+              <i data-lucide="user" class="w-4 h-4 mr-2"></i> My Profile
+            </a>
             <div class="border-t border-gray-100"></div>
             <button
               onclick="logout()"
@@ -276,6 +337,8 @@
             </button>
           </div>
         </div>
+
+        <!-- Guest Profile (Visible if Logged Out, but this page will redirect anyway) -->
         <div id="guest-profile" class="hidden">
           <div class="p-3 bg-gray-50 rounded-xl text-center space-y-3">
             <p class="text-sm text-gray-500 mb-2">Welcome to StockMaster</p>
@@ -284,12 +347,19 @@
               class="block w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
               >Log In</a
             >
+            <a
+              href="signup.php"
+              class="block w-full py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+              >Sign Up</a
+            >
           </div>
         </div>
       </div>
     </aside>
 
+    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden w-full">
+      <!-- Header -->
       <header
         class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 lg:px-8 z-10 shrink-0"
       >
@@ -304,18 +374,22 @@
             Products
           </h2>
         </div>
+
         <div class="flex items-center space-x-4">
           <button
             onclick="toggleModal()"
             class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center"
           >
-            <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Create Product
+            <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+            Create Product
           </button>
         </div>
       </header>
 
+      <!-- Main Area -->
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
         <div class="max-w-7xl mx-auto">
+          <!-- Filters & Search -->
           <div
             class="bg-white border border-gray-200 rounded-2xl shadow-sm mb-6"
           >
@@ -336,9 +410,26 @@
                     class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"
                   ></i>
                 </div>
+                <button
+                  class="p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-100"
+                >
+                  <i data-lucide="filter" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-500 mr-2">Group By:</span>
+                <select
+                  class="text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500"
+                >
+                  <option>Category</option>
+                  <option>Type</option>
+                </select>
               </div>
             </div>
           </div>
+
+          <!-- Product Table -->
           <div
             class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden"
           >
@@ -355,16 +446,30 @@
                     <th class="p-4">Internal Ref</th>
                     <th class="p-4">Category</th>
                     <th class="p-4 text-right">Price</th>
+                    <th class="p-4 text-right">Cost</th>
                     <th class="p-4 text-right">On Hand</th>
+                    <th class="p-4 w-20"></th>
                   </tr>
                 </thead>
                 <tbody id="productTableBody" class="divide-y divide-gray-100">
+                  <!-- Row 1 -->
                   <tr class="hover:bg-gray-50 transition-colors group">
                     <td class="p-4">
                       <input type="checkbox" class="rounded border-gray-300" />
                     </td>
-                    <td class="p-4 font-medium text-gray-900">
-                      Acoustic Bloc Screen
+                    <td class="p-4">
+                      <div class="flex items-center">
+                        <div
+                          class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mr-3"
+                        >
+                          <i data-lucide="image" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                          <div class="font-medium text-gray-900">
+                            Acoustic Bloc Screen
+                          </div>
+                        </div>
+                      </div>
                     </td>
                     <td class="p-4 text-gray-500">FURN-001</td>
                     <td class="p-4">
@@ -375,118 +480,255 @@
                     <td class="p-4 text-right font-medium text-gray-900">
                       $295.00
                     </td>
+                    <td class="p-4 text-right text-gray-500">$120.00</td>
                     <td class="p-4 text-right">
                       <span
                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                        >50.00 Units</span
                       >
+                        50.00 Units
+                      </span>
+                    </td>
+                    <td class="p-4 text-right">
+                      <button
+                        class="text-gray-400 hover:text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Row 2 -->
+                  <tr class="hover:bg-gray-50 transition-colors group">
+                    <td class="p-4">
+                      <input type="checkbox" class="rounded border-gray-300" />
+                    </td>
+                    <td class="p-4">
+                      <div class="flex items-center">
+                        <div
+                          class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mr-3"
+                        >
+                          <i data-lucide="image" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                          <div class="font-medium text-gray-900">
+                            Corner Desk Black
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="p-4 text-gray-500">FURN-002</td>
+                    <td class="p-4">
+                      <span class="px-2 py-1 rounded-md bg-gray-100 text-xs"
+                        >Furniture</span
+                      >
+                    </td>
+                    <td class="p-4 text-right font-medium text-gray-900">
+                      $85.00
+                    </td>
+                    <td class="p-4 text-right text-gray-500">$45.00</td>
+                    <td class="p-4 text-right">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                      >
+                        2.00 Units
+                      </span>
+                    </td>
+                    <td class="p-4 text-right">
+                      <button
+                        class="text-gray-400 hover:text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Row 3 -->
+                  <tr class="hover:bg-gray-50 transition-colors group">
+                    <td class="p-4">
+                      <input type="checkbox" class="rounded border-gray-300" />
+                    </td>
+                    <td class="p-4">
+                      <div class="flex items-center">
+                        <div
+                          class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mr-3"
+                        >
+                          <i data-lucide="image" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                          <div class="font-medium text-gray-900">
+                            USB-C Cable (2m)
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="p-4 text-gray-500">ELEC-005</td>
+                    <td class="p-4">
+                      <span class="px-2 py-1 rounded-md bg-gray-100 text-xs"
+                        >Electronics</span
+                      >
+                    </td>
+                    <td class="p-4 text-right font-medium text-gray-900">
+                      $12.99
+                    </td>
+                    <td class="p-4 text-right text-gray-500">$4.50</td>
+                    <td class="p-4 text-right">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                      >
+                        120.00 Units
+                      </span>
+                    </td>
+                    <td class="p-4 text-right">
+                      <button
+                        class="text-gray-400 hover:text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between"
+            >
+              <span class="text-xs text-gray-500"
+                >Showing 1-3 of 34 products</span
+              >
+              <div class="flex space-x-2">
+                <button
+                  class="p-1 rounded-md hover:bg-gray-200 disabled:opacity-50"
+                  disabled
+                >
+                  <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <button class="p-1 rounded-md hover:bg-gray-200">
+                  <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </main>
     </div>
 
+    <!-- Scripts -->
     <script>
       lucide.createIcons();
+
+      // Read login state from localStorage
       let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+      // If user is not logged in, block direct access to this page
+      if (!isLoggedIn) {
+        window.location.href = "access-denied.html";
+      }
+
+      function updateUserUI() {
+        const loginId = localStorage.getItem("loginId") || "User";
+        const loginIdElement = document.getElementById("user-login-id");
+        const avatarTextElement = document.getElementById("user-avatar-text");
+
+        if (loginIdElement) {
+          loginIdElement.innerText = loginId;
+        }
+        if (avatarTextElement && loginId.length > 0) {
+          avatarTextElement.innerText = loginId.charAt(0).toUpperCase();
+        }
+      }
+
       function checkLoginState() {
         const userProfile = document.getElementById("user-profile");
         const guestProfile = document.getElementById("guest-profile");
-        const authOverlay = document.getElementById("auth-overlay");
 
         if (isLoggedIn) {
           userProfile.classList.remove("hidden");
           guestProfile.classList.add("hidden");
-          if (authOverlay) authOverlay.classList.add("hidden");
-          fetchProducts();
+          updateUserUI();
         } else {
           userProfile.classList.add("hidden");
           guestProfile.classList.remove("hidden");
-          if (authOverlay) authOverlay.classList.remove("hidden");
         }
       }
 
-      async function fetchProducts() {
-        try {
-          const response = await fetch("api.php?action=products");
-          if (!response.ok) throw new Error();
-          const products = await response.json();
-          renderTable(products);
-        } catch (e) {
-          console.warn("Using Mock Data");
-          renderTable([
-            {
-              name: "Acoustic Bloc Screen",
-              internal_ref: "FURN-001",
-              category: "Furniture",
-              price: 295.0,
-              stock_quantity: 50,
-            },
-            {
-              name: "Corner Desk Black",
-              internal_ref: "FURN-002",
-              category: "Furniture",
-              price: 85.0,
-              stock_quantity: 2,
-            },
-            {
-              name: "USB-C Cable",
-              internal_ref: "ELEC-005",
-              category: "Electronics",
-              price: 12.99,
-              stock_quantity: 120,
-            },
-          ]);
-        }
-      }
-
-      function renderTable(data) {
-        const tbody = document.getElementById("productTableBody");
-        tbody.innerHTML = "";
-        data.forEach((p) => {
-          tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 transition-colors group">
-                        <td class="p-4"><input type="checkbox" class="rounded border-gray-300"></td>
-                        <td class="p-4 font-medium text-gray-900">${p.name}</td>
-                        <td class="p-4 text-gray-500">${
-                          p.internal_ref || "-"
-                        }</td>
-                        <td class="p-4"><span class="px-2 py-1 rounded-md bg-gray-100 text-xs">${
-                          p.category
-                        }</span></td>
-                        <td class="p-4 text-right font-medium text-gray-900">$${
-                          p.price
-                        }</td>
-                        <td class="p-4 text-right"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          p.stock_quantity < 5
-                            ? "bg-red-100 text-red-800"
-                            : "bg-green-100 text-green-800"
-                        }">${p.stock_quantity} Units</span></td>
-                    </tr>
-                `;
+      function setupProtectedLinks() {
+        const protectedLinks = document.querySelectorAll(
+          "[data-requires-auth='true']"
+        );
+        protectedLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            if (!isLoggedIn) {
+              e.preventDefault();
+              window.location.href = "access-denied.html";
+            }
+          });
         });
       }
 
       function toggleProfileMenu() {
         document.getElementById("profile-menu").classList.toggle("hidden");
       }
+
       function logout() {
         localStorage.setItem("isLoggedIn", "false");
+        localStorage.removeItem("loginId");
+        isLoggedIn = false;
         window.location.href = "login.php";
       }
+
+      // Sidebar Logic
       function toggleSidebar() {
-        document
-          .getElementById("sidebar")
-          .classList.toggle("-translate-x-full");
-        document.getElementById("mobile-overlay").classList.toggle("hidden");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("mobile-overlay");
+
+        if (sidebar.classList.contains("-translate-x-full")) {
+          sidebar.classList.remove("-translate-x-full");
+          overlay.classList.remove("hidden");
+        } else {
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        }
       }
+
+      // Modal Logic
       function toggleModal() {
-        document.getElementById("create-modal").classList.toggle("hidden");
+        const modal = document.getElementById("create-modal");
+        if (modal.classList.contains("hidden")) {
+          modal.classList.remove("hidden");
+        } else {
+          modal.classList.add("hidden");
+        }
       }
+
+      // Search Logic
+      function searchTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const table = document.getElementById("productTableBody");
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 0; i < tr.length; i++) {
+          const tdName = tr[i].getElementsByTagName("td")[1]; // Name column
+          const tdRef = tr[i].getElementsByTagName("td")[2]; // Ref column
+          if (tdName || tdRef) {
+            const txtValueName = tdName.textContent || tdName.innerText;
+            const txtValueRef = tdRef.textContent || tdRef.innerText;
+            if (
+              txtValueName.toUpperCase().indexOf(filter) > -1 ||
+              txtValueRef.toUpperCase().indexOf(filter) > -1
+            ) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+      // Init
+      setupProtectedLinks();
       checkLoginState();
     </script>
   </body>

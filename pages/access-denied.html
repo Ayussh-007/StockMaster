@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Access Denied – StockMaster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 h-screen flex items-center justify-center p-6">
+    <div
+      class="bg-white max-w-lg w-full p-10 rounded-2xl shadow-xl border border-gray-200 text-center"
+    >
+      <!-- Icon -->
+      <div
+        class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-red-100 text-red-600 rounded-full"
+      >
+        <i data-lucide="shield-off" class="w-8 h-8"></i>
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">
+        Access Denied
+      </h1>
+
+      <!-- Message -->
+      <p class="text-gray-600 text-sm mb-8 leading-relaxed">
+        You are trying to access a restricted area.<br />
+        Please log in to continue using StockMaster services.
+      </p>
+
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
+        <a
+          href="login.php"
+          class="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors"
+        >
+          Go to Login
+        </a>
+
+        <a
+          href="dashboard.html"
+          class="w-full py-3 px-4 bg-gray-100 text-gray-800 rounded-lg font-medium text-sm hover:bg-gray-200 transition-colors"
+        >
+          Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

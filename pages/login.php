@@ -497,10 +497,19 @@
             const data = await response.json();
 
             if (!response.ok || !data.success) {
+                // Clear any existing login state
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('loginId');
+
                 showAlert('loginAlert', data.error || 'Login failed. Please try again.', 'danger');
             } else {
+                // Store login state and login ID for dashboard and other pages
+                if (data.user && data.user.loginId) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('loginId', data.user.loginId);
+                }
+
                 showAlert('loginAlert', 'Login successful. Redirecting...', 'success');
-                // Redirect to dashboard.html after login
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 800);
@@ -655,4 +664,3 @@
 </script>
 </body>
 </html>
-    

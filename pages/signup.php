@@ -141,7 +141,7 @@
         <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </button>
 
-      <p class="signin-link">Already have an account? <a href="login.html">Sign in</a></p>
+      <p class="signin-link">Already have an account? <a href="login.php">Sign in</a></p>
     </div>
   </main>
 

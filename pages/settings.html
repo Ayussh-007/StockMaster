@@ -33,7 +33,7 @@
   <body
     class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden relative"
   >
-    <!-- Auth Overlay (Blocker) -->
+    <!-- Auth Overlay (Blocker when not logged in) -->
     <div
       id="auth-overlay"
       class="fixed inset-0 z-[60] bg-gray-900/60 backdrop-blur-md hidden flex items-center justify-center transition-opacity duration-300"
@@ -65,6 +65,7 @@
       </div>
     </div>
 
+    <!-- Mobile Overlay -->
     <div
       id="mobile-overlay"
       onclick="toggleSidebar()"
@@ -150,7 +151,9 @@
         >
       </nav>
 
+      <!-- Bottom profile area with Login ID (same pattern as dashboard) -->
       <div class="p-4 border-t border-gray-100 relative">
+        <!-- Logged-in state -->
         <div id="user-profile" class="hidden">
           <button
             onclick="toggleProfileMenu()"
@@ -159,13 +162,16 @@
             <div
               class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold border-2 border-white shadow-sm"
             >
-              A
+              <span id="user-avatar-text">U</span>
             </div>
             <div class="ml-3 flex-1 overflow-hidden">
-              <p class="text-sm font-semibold text-gray-900 truncate">
-                Alex Manager
+              <p class="text-xs text-gray-500 truncate">Logged in as</p>
+              <p
+                id="user-login-id"
+                class="text-sm font-semibold text-gray-900 truncate"
+              >
+                User
               </p>
-              <p class="text-xs text-gray-500 truncate">Warehouse Admin</p>
             </div>
             <i data-lucide="chevron-up" class="w-4 h-4 text-gray-400"></i>
           </button>
@@ -187,6 +193,8 @@
             </button>
           </div>
         </div>
+
+        <!-- Guest state -->
         <div id="guest-profile" class="hidden">
           <div class="p-3 bg-gray-50 rounded-xl text-center space-y-3">
             <p class="text-sm text-gray-500 mb-2">Welcome to StockMaster</p>
@@ -200,6 +208,7 @@
       </div>
     </aside>
 
+    <!-- Main content -->
     <div class="flex-1 flex flex-col overflow-hidden w-full">
       <header
         class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 lg:px-8 z-10 shrink-0"
@@ -236,14 +245,18 @@
             class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6"
           >
             <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-              <i data-lucide="building" class="w-5 h-5 mr-2 text-slate-500"></i>
+              <i
+                data-lucide="building"
+                class="w-5 h-5 mr-2 text-slate-500"
+              ></i>
               Company Information
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2"
                   >Company Name</label
-                ><input
+                >
+                <input
                   type="text"
                   value="My Company Ltd."
                   class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -252,7 +265,8 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
                   >Currency</label
-                ><select
+                >
+                <select
                   class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                 >
                   <option selected>USD ($)</option>
@@ -266,34 +280,59 @@
 
     <script>
       lucide.createIcons();
+
+      // Read login state from localStorage
       let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+      function updateUserUI() {
+        const loginId = localStorage.getItem("loginId") || "User";
+        const loginIdElement = document.getElementById("user-login-id");
+        const avatarTextElement = document.getElementById("user-avatar-text");
+
+        if (loginIdElement) {
+          loginIdElement.innerText = loginId;
+        }
+        if (avatarTextElement && loginId.length > 0) {
+          avatarTextElement.innerText = loginId.charAt(0).toUpperCase();
+        }
+      }
+
       function checkLoginState() {
         const userProfile = document.getElementById("user-profile");
         const guestProfile = document.getElementById("guest-profile");
         const authOverlay = document.getElementById("auth-overlay");
+
         if (isLoggedIn) {
           userProfile.classList.remove("hidden");
           guestProfile.classList.add("hidden");
           if (authOverlay) authOverlay.classList.add("hidden");
+          updateUserUI();
         } else {
           userProfile.classList.add("hidden");
           guestProfile.classList.remove("hidden");
           if (authOverlay) authOverlay.classList.remove("hidden");
         }
       }
+
       function toggleProfileMenu() {
         document.getElementById("profile-menu").classList.toggle("hidden");
       }
+
       function logout() {
         localStorage.setItem("isLoggedIn", "false");
+        localStorage.removeItem("loginId");
+        isLoggedIn = false;
         window.location.href = "login.php";
       }
+
       function toggleSidebar() {
         document
           .getElementById("sidebar")
           .classList.toggle("-translate-x-full");
         document.getElementById("mobile-overlay").classList.toggle("hidden");
       }
+
+      // Init
       checkLoginState();
     </script>
   </body>
