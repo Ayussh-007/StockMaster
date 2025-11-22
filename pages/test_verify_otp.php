@@ -28,7 +28,7 @@ function verifyOtp() {
         document.getElementById("result").textContent = "Error: " + err;
     });
 }
-</script>
+</script>   
 
 </body>
 </html>
