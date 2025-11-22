@@ -324,7 +324,7 @@ if ($result && $result->num_rows > 0) {
         </div>
 
         <a
-          href="receipts.html"
+          href="receipts.php"
           data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
         >
@@ -332,7 +332,7 @@ if ($result && $result->num_rows > 0) {
           Receipts
         </a>
         <a
-          href="delivery.html"
+          href="delivery.php"
           data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
         >
@@ -340,7 +340,7 @@ if ($result && $result->num_rows > 0) {
           Delivery Orders
         </a>
         <a
-          href="inventoryadj.html"
+          href="inventoryadj.php"
           data-requires-auth="true"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
         >

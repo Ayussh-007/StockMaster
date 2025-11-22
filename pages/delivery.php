@@ -271,7 +271,7 @@ if ($result && $result->num_rows > 0) {
           ><i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders</a
         >
         <a
-          href="inventoryadj.html"
+          href="inventoryadj.php"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           ><i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i> Inventory
           Adj.</a
