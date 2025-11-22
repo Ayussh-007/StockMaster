@@ -1,189 +1,199 @@
 <?php
 // ============================================
-// API.PHP - Backend for Stock Market Signup
-// Database: stock_market
-// Table: login_credentials
+// API.PHP - Unified Backend for StockMaster
+// Handles: Register, Login, Forgot Password
+// Database: stock_master
+// Tables: login_credentials, password_reset_otp
 // ============================================
 
-// Show errors (helpful for debugging)
+// 1. CONFIGURATION
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Don't echo errors to screen, it breaks JSON
 
-// Set JSON headers
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// ============================================
-// DATABASE CONNECTION
-// ============================================
+// 2. DATABASE CONNECTION
 $host = 'localhost';
-$dbname = 'stock_master';    // Your database name
-$username = 'root';           // Default XAMPP username
-$password = '';               // Default XAMPP has no password
+$dbname = 'stock_master';
+$username = 'root';
+$password = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+    echo json_encode(['error' => 'Database connection failed']);
     exit;
 }
 
-// ============================================
-// GET ACTION FROM URL
-// ============================================
+// 3. ROUTING
 $action = isset($_GET['action']) ? $_GET['action'] : '';
+$input = json_decode(file_get_contents('php://input'), true);
 
-// ============================================
-// HANDLE DIFFERENT ACTIONS
-// ============================================
+try {
+    switch ($action) {
 
-if ($action === 'check-login-id') {
-    // --------------------------------------------
-    // CHECK IF LOGIN ID EXISTS
-    // URL: api.php?action=check-login-id&login_id=xxxxx
-    // --------------------------------------------
-    
-    $loginId = isset($_GET['login_id']) ? trim($_GET['login_id']) : '';
-    
-    if (empty($loginId)) {
-        echo json_encode(['error' => 'Login ID is required']);
-        exit;
+        // ============================================================
+        // ACTION: CHECK LOGIN ID (For Signup)
+        // ============================================================
+        case 'check-login-id':
+            $loginId = $_GET['login_id'] ?? '';
+            $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE login_id = ?");
+            $stmt->execute([$loginId]);
+            echo json_encode(['exists' => $stmt->rowCount() > 0]);
+            break;
+
+        // ============================================================
+        // ACTION: CHECK EMAIL AVAILABILITY (For Signup)
+        // ============================================================
+        case 'check-email':
+            $email = $_GET['email'] ?? '';
+            $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE email_id = ?");
+            $stmt->execute([$email]);
+            echo json_encode(['exists' => $stmt->rowCount() > 0]);
+            break;
+
+        // ============================================================
+        // ACTION: REGISTER NEW USER
+        // ============================================================
+        case 'register':
+            $loginId = trim($input['loginId']);
+            $email = trim($input['email']);
+            $pwd = $input['password'];
+
+            // Basic Validation
+            if (empty($loginId) || empty($email) || empty($pwd)) {
+                throw new Exception("All fields are required");
+            }
+
+            // Check Duplicates
+            $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE login_id = ? OR email_id = ?");
+            $stmt->execute([$loginId, $email]);
+            if ($stmt->rowCount() > 0) {
+                throw new Exception("Login ID or Email already exists");
+            }
+
+            // Insert
+            $hashedPassword = password_hash($pwd, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("INSERT INTO login_credentials (login_id, email_id, password) VALUES (?, ?, ?)");
+            $stmt->execute([$loginId, $email, $hashedPassword]);
+
+            echo json_encode(['success' => true, 'message' => 'Registration successful']);
+            break;
+
+        // ============================================================
+        // ACTION: LOGIN USER (Missing in your previous code)
+        // ============================================================
+        case 'login':
+            $loginId = $input['loginId'] ?? '';
+            $pwd = $input['password'] ?? '';
+
+            $stmt = $pdo->prepare("SELECT id, login_id, email_id, password FROM login_credentials WHERE login_id = ?");
+            $stmt->execute([$loginId]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user && password_verify($pwd, $user['password'])) {
+                echo json_encode([
+                    'success' => true,
+                    'user' => [
+                        'id' => $user['id'],
+                        'loginId' => $user['login_id'],
+                        'email' => $user['email_id']
+                    ]
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid credentials']);
+            }
+            break;
+
+        // ============================================================
+        // ACTION: CHECK EMAIL EXISTS (For Forgot Password)
+        // ============================================================
+        case 'check-email-exists':
+            $email = $_GET['email'] ?? '';
+            $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE email_id = ?");
+            $stmt->execute([$email]);
+            echo json_encode(['exists' => $stmt->rowCount() > 0]);
+            break;
+
+        // ============================================================
+        // ACTION: SEND OTP (For Forgot Password)
+        // ============================================================
+        case 'send-otp':
+            $email = $input['email'] ?? '';
+
+            // 1. Verify Email
+            $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE email_id = ?");
+            $stmt->execute([$email]);
+            if ($stmt->rowCount() == 0) {
+                throw new Exception("Email not registered");
+            }
+
+            // 2. Generate OTP
+            $otp = rand(100000, 999999);
+            $expiry = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+
+            // 3. Store in Database (Cleanup old OTPs first)
+            $del = $pdo->prepare("DELETE FROM password_reset_otp WHERE email_id = ?");
+            $del->execute([$email]);
+
+            $stmt = $pdo->prepare("INSERT INTO password_reset_otp (email_id, otp, expires_at) VALUES (?, ?, ?)");
+            $stmt->execute([$email, $otp, $expiry]);
+
+            // 4. SIMULATE SENDING EMAIL (For Localhost/XAMPP)
+            // This writes the OTP to a file in your project folder named 'otp_log.txt'
+            $logMessage = "[" . date('Y-m-d H:i:s') . "] OTP for $email: $otp" . PHP_EOL;
+            file_put_contents("otp_log.txt", $logMessage, FILE_APPEND);
+
+            echo json_encode(['success' => true, 'message' => 'OTP generated. Check otp_log.txt']);
+            break;
+
+        // ============================================================
+        // ACTION: RESET PASSWORD
+        // ============================================================
+        case 'reset-password':
+            $email = $input['email'];
+            $otp = $input['otp'];
+            $newPass = $input['newPassword'];
+
+            // 1. Validate OTP
+            $stmt = $pdo->prepare("SELECT id FROM password_reset_otp WHERE email_id = ? AND otp = ? AND is_used = 0 AND expires_at > NOW()");
+            $stmt->execute([$email, $otp]);
+
+            if ($stmt->rowCount() == 0) {
+                throw new Exception("Invalid or expired OTP");
+            }
+
+            $otpRecord = $stmt->fetch();
+
+            // 2. Update Password
+            $hashedPassword = password_hash($newPass, PASSWORD_DEFAULT);
+            $update = $pdo->prepare("UPDATE login_credentials SET password = ? WHERE email_id = ?");
+            $update->execute([$hashedPassword, $email]);
+
+            // 3. Mark OTP as used
+            $mark = $pdo->prepare("UPDATE password_reset_otp SET is_used = 1 WHERE id = ?");
+            $mark->execute([$otpRecord['id']]);
+
+            echo json_encode(['success' => true, 'message' => 'Password reset successfully']);
+            break;
+
+        // ============================================================
+        // DEFAULT: ERROR
+        // ============================================================
+        default:
+            echo json_encode(['error' => "Invalid action: $action"]);
+            break;
     }
-    
-    $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE login_id = ?");
-    $stmt->execute([$loginId]);
-    $exists = $stmt->fetch() ? true : false;
-    
-    echo json_encode(['exists' => $exists]);
-    exit;
+
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
-
-if ($action === 'check-email') {
-    // --------------------------------------------
-    // CHECK IF EMAIL EXISTS
-    // URL: api.php?action=check-email&email=xxxxx
-    // --------------------------------------------
-    
-    $email = isset($_GET['email']) ? trim($_GET['email']) : '';
-    
-    if (empty($email)) {
-        echo json_encode(['error' => 'Email is required']);
-        exit;
-    }
-    
-    $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE email_id = ?");
-    $stmt->execute([$email]);
-    $exists = $stmt->fetch() ? true : false;
-    
-    echo json_encode(['exists' => $exists]);
-    exit;
-}
-
-if ($action === 'register') {
-    // --------------------------------------------
-    // REGISTER NEW USER
-    // URL: api.php?action=register (POST request)
-    // --------------------------------------------
-    
-    // Get JSON data from request body
-    $jsonData = file_get_contents('php://input');
-    $data = json_decode($jsonData, true);
-    
-    $loginId = isset($data['loginId']) ? trim($data['loginId']) : '';
-    $email = isset($data['email']) ? trim($data['email']) : '';
-    $pwd = isset($data['password']) ? $data['password'] : '';
-    
-    // ---- VALIDATION ----
-    $errors = [];
-    
-    // Login ID validation
-    if (empty($loginId)) {
-        $errors[] = 'Login ID is required';
-    } elseif (strlen($loginId) < 6 || strlen($loginId) > 12) {
-        $errors[] = 'Login ID must be 6-12 characters';
-    }
-    
-    // Email validation
-    if (empty($email)) {
-        $errors[] = 'Email is required';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Invalid email format';
-    }
-    
-    // Password validation
-    if (empty($pwd)) {
-        $errors[] = 'Password is required';
-    } else {
-        if (strlen($pwd) < 8) {
-            $errors[] = 'Password must be at least 8 characters';
-        }
-        if (!preg_match('/[a-z]/', $pwd)) {
-            $errors[] = 'Password must contain a lowercase letter';
-        }
-        if (!preg_match('/[A-Z]/', $pwd)) {
-            $errors[] = 'Password must contain an uppercase letter';
-        }
-        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $pwd)) {
-            $errors[] = 'Password must contain a special character';
-        }
-    }
-    
-    // Return errors if any
-    if (!empty($errors)) {
-        http_response_code(400);
-        echo json_encode(['error' => implode(', ', $errors)]);
-        exit;
-    }
-    
-    // ---- CHECK FOR DUPLICATES ----
-    $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE login_id = ?");
-    $stmt->execute([$loginId]);
-    if ($stmt->fetch()) {
-        http_response_code(409);
-        echo json_encode(['error' => 'Login ID already exists']);
-        exit;
-    }
-    
-    $stmt = $pdo->prepare("SELECT id FROM login_credentials WHERE email_id = ?");
-    $stmt->execute([$email]);
-    if ($stmt->fetch()) {
-        http_response_code(409);
-        echo json_encode(['error' => 'Email already registered']);
-        exit;
-    }
-    
-    // ---- HASH PASSWORD & INSERT ----
-    $hashedPassword = password_hash($pwd, PASSWORD_DEFAULT);
-    
-    try {
-        $stmt = $pdo->prepare("INSERT INTO login_credentials (login_id, email_id, password) VALUES (?, ?, ?)");
-        $stmt->execute([$loginId, $email, $hashedPassword]);
-        
-        http_response_code(201);
-        echo json_encode([
-            'success' => true,
-            'message' => 'Account created successfully!',
-            'userId' => $pdo->lastInsertId()
-        ]);
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Registration failed: ' . $e->getMessage()]);
-    }
-    exit;
-}
-
-// ============================================
-// INVALID ACTION
-// ============================================
-http_response_code(400);
-echo json_encode(['error' => 'Invalid action. Use: check-login-id, check-email, or register']);
 ?>
