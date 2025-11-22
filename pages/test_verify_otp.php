@@ -27,7 +27,7 @@ function verifyOtp() {
     .catch(err => {
         document.getElementById("result").textContent = "Error: " + err;
     });
-}//change
+}
 </script>  
 
 </body>
