@@ -30,8 +30,11 @@
       }
     </style>
   </head>
-  <body class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden">
-    <!-- Mobile Overlay -->
+  <body
+    class="bg-gray-50 text-slate-800 h-screen flex overflow-hidden relative"
+  >
+    <!-- Note: Auth Overlay removed for Dashboard to allow Guest Mode -->
+
     <div
       id="mobile-overlay"
       onclick="toggleSidebar()"
@@ -59,7 +62,6 @@
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
-
       <nav class="flex-1 overflow-y-auto p-4 space-y-1">
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-2"
@@ -69,15 +71,14 @@
         <a
           href="dashboard.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 bg-indigo-50 text-indigo-600 font-medium transition-colors"
+          ><i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+          Dashboard</a
         >
-          <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i> Dashboard
-        </a>
         <a
           href="products.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          ><i data-lucide="package" class="w-5 h-5 mr-3"></i> Products</a
         >
-          <i data-lucide="package" class="w-5 h-5 mr-3"></i> Products
-        </a>
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
         >
@@ -86,31 +87,39 @@
         <a
           href="receipts.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          ><i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i>
+          Receipts</a
         >
-          <i data-lucide="arrow-down-left" class="w-5 h-5 mr-3"></i> Receipts
-        </a>
         <a
           href="delivery.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          ><i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders</a
         >
-          <i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders
-        </a>
+        <a
+          href="inventoryadj.html"
+          class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          ><i data-lucide="clipboard-list" class="w-5 h-5 mr-3"></i> Inventory
+          Adj.</a
+        >
+        <a
+          href="movehistory.html"
+          class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          ><i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i> Move
+          History</a
+        >
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-6"
         >
           Configuration
         </div>
         <a
-          href="#"
+          href="settings.html"
           class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          ><i data-lucide="settings" class="w-5 h-5 mr-3"></i> Settings</a
         >
-          <i data-lucide="settings" class="w-5 h-5 mr-3"></i> Settings
-        </a>
       </nav>
-
-      <!-- Profile Section -->
       <div class="p-4 border-t border-gray-100 relative">
-        <!-- Logged In State -->
+        <!-- User Profile (Visible if Logged In) -->
         <div id="user-profile" class="hidden">
           <button
             onclick="toggleProfileMenu()"
@@ -129,8 +138,6 @@
             </div>
             <i data-lucide="chevron-up" class="w-4 h-4 text-gray-400"></i>
           </button>
-
-          <!-- Dropdown Menu -->
           <div
             id="profile-menu"
             class="hidden absolute bottom-20 left-4 right-4 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
@@ -138,9 +145,8 @@
             <a
               href="#"
               class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex items-center"
+              ><i data-lucide="user" class="w-4 h-4 mr-2"></i> My Profile</a
             >
-              <i data-lucide="user" class="w-4 h-4 mr-2"></i> My Profile
-            </a>
             <div class="border-t border-gray-100"></div>
             <button
               onclick="logout()"
@@ -150,18 +156,17 @@
             </button>
           </div>
         </div>
-
-        <!-- Logged Out State -->
+        <!-- Guest Profile (Visible if Logged Out) -->
         <div id="guest-profile" class="hidden">
           <div class="p-3 bg-gray-50 rounded-xl text-center space-y-3">
             <p class="text-sm text-gray-500 mb-2">Welcome to StockMaster</p>
             <a
-              href="login.html"
+              href="login.php"
               class="block w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
               >Log In</a
             >
             <a
-              href="signup.html"
+              href="signup.php"
               class="block w-full py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
               >Sign Up</a
             >
@@ -170,7 +175,6 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden w-full">
       <header
         class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 lg:px-8 z-10 shrink-0"
@@ -187,22 +191,11 @@
           </h2>
         </div>
         <div class="flex items-center space-x-4">
-          <div class="hidden md:flex relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              class="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all w-64 outline-none"
-            />
-            <i
-              data-lucide="search"
-              class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"
-            ></i>
-          </div>
           <button
             class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors relative"
           >
-            <i data-lucide="bell" class="w-5 h-5"></i>
-            <span
+            <i data-lucide="bell" class="w-5 h-5"></i
+            ><span
               class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"
             ></span>
           </button>
@@ -210,6 +203,7 @@
       </header>
 
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+        <!-- Content same as before, always visible -->
         <div class="max-w-7xl mx-auto space-y-8">
           <!-- KPI Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -221,7 +215,9 @@
                   <i data-lucide="package" class="w-5 h-5"></i>
                 </div>
               </div>
-              <h3 class="text-2xl font-bold text-gray-900">1,240</h3>
+              <h3 id="kpi-products" class="text-2xl font-bold text-gray-900">
+                ...
+              </h3>
               <p class="text-sm text-gray-500 mt-1">Total Products</p>
             </div>
             <div
@@ -232,7 +228,9 @@
                   <i data-lucide="alert-triangle" class="w-5 h-5"></i>
                 </div>
               </div>
-              <h3 class="text-2xl font-bold text-gray-900">12</h3>
+              <h3 id="kpi-lowstock" class="text-2xl font-bold text-gray-900">
+                ...
+              </h3>
               <p class="text-sm text-gray-500 mt-1">Low Stock Alerts</p>
             </div>
             <div
@@ -243,7 +241,9 @@
                   <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
                 </div>
               </div>
-              <h3 class="text-2xl font-bold text-gray-900">4</h3>
+              <h3 id="kpi-receipts" class="text-2xl font-bold text-gray-900">
+                ...
+              </h3>
               <p class="text-sm text-gray-500 mt-1">Pending Receipts</p>
             </div>
             <div
@@ -254,7 +254,9 @@
                   <i data-lucide="truck" class="w-5 h-5"></i>
                 </div>
               </div>
-              <h3 class="text-2xl font-bold text-gray-900">8</h3>
+              <h3 id="kpi-deliveries" class="text-2xl font-bold text-gray-900">
+                ...
+              </h3>
               <p class="text-sm text-gray-500 mt-1">Pending Deliveries</p>
             </div>
           </div>
@@ -273,24 +275,11 @@
                     <i data-lucide="arrow-down-left" class="w-6 h-6"></i>
                   </div>
                 </div>
-                <div class="flex items-center justify-between">
-                  <button
-                    class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors font-semibold text-sm uppercase tracking-wide"
-                  >
-                    4 to receive
-                  </button>
-                  <div class="text-right space-y-1">
-                    <div
-                      class="text-sm font-medium text-orange-500 flex items-center justify-end"
-                    >
-                      <span
-                        class="w-2 h-2 bg-orange-500 rounded-full mr-2"
-                      ></span
-                      >1 Late
-                    </div>
-                    <div class="text-sm text-gray-500">6 Operations</div>
-                  </div>
-                </div>
+                <button
+                  class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors font-semibold text-sm uppercase tracking-wide"
+                >
+                  Manage Receipts
+                </button>
               </div>
             </div>
             <div
@@ -307,30 +296,11 @@
                     <i data-lucide="truck" class="w-6 h-6"></i>
                   </div>
                 </div>
-                <div class="flex items-center justify-between">
-                  <button
-                    class="bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors font-semibold text-sm uppercase tracking-wide"
-                  >
-                    4 to deliver
-                  </button>
-                  <div class="text-right space-y-1">
-                    <div
-                      class="text-sm font-medium text-orange-500 flex items-center justify-end"
-                    >
-                      <span
-                        class="w-2 h-2 bg-orange-500 rounded-full mr-2"
-                      ></span
-                      >1 Late
-                    </div>
-                    <div
-                      class="text-sm font-medium text-blue-500 flex items-center justify-end"
-                    >
-                      <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span
-                      >2 Waiting
-                    </div>
-                    <div class="text-sm text-gray-500">6 Operations</div>
-                  </div>
-                </div>
+                <button
+                  class="bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors font-semibold text-sm uppercase tracking-wide"
+                >
+                  Manage Deliveries
+                </button>
               </div>
             </div>
           </div>
@@ -340,7 +310,6 @@
 
     <script>
       lucide.createIcons();
-
       // Check for explicit 'true', otherwise default to false (Guest)
       let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
@@ -355,18 +324,40 @@
           userProfile.classList.add("hidden");
           guestProfile.classList.remove("hidden");
         }
+
+        // Always fetch data for dashboard view (Guest or User)
+        fetchDashboardData();
+      }
+
+      async function fetchDashboardData() {
+        try {
+          const response = await fetch("api.php?action=stats");
+          if (!response.ok) throw new Error("API not found");
+          const data = await response.json();
+
+          document.getElementById("kpi-products").innerText =
+            data.total_products;
+          document.getElementById("kpi-lowstock").innerText = data.low_stock;
+          document.getElementById("kpi-receipts").innerText =
+            data.pending_receipts;
+          document.getElementById("kpi-deliveries").innerText =
+            data.pending_deliveries;
+        } catch (error) {
+          console.warn("Backend API not found. Using Mock Data.");
+          document.getElementById("kpi-products").innerText = "1,240";
+          document.getElementById("kpi-lowstock").innerText = "12";
+          document.getElementById("kpi-receipts").innerText = "4";
+          document.getElementById("kpi-deliveries").innerText = "8";
+        }
       }
 
       function toggleProfileMenu() {
-        const menu = document.getElementById("profile-menu");
-        menu.classList.toggle("hidden");
+        document.getElementById("profile-menu").classList.toggle("hidden");
       }
-
       function logout() {
         localStorage.setItem("isLoggedIn", "false");
-        window.location.href = "login.html";
+        window.location.href = "login.php";
       }
-
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("mobile-overlay");

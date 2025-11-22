@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StockMaster - Delivery Orders</title>
+    <title>StockMaster - Move History</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link
@@ -28,19 +28,6 @@
       .sidebar-transition {
         transition: transform 0.3s ease-in-out;
       }
-      .modal {
-        transition: opacity 0.25s ease;
-      }
-      .modal-content {
-        transition: transform 0.25s ease;
-      }
-      .modal.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-      .modal.hidden .modal-content {
-        transform: scale(0.95);
-      }
     </style>
   </head>
   <body
@@ -61,7 +48,7 @@
         </div>
         <h2 class="text-2xl font-bold text-gray-900 mb-3">Access Restricted</h2>
         <p class="text-gray-500 mb-8 leading-relaxed">
-          Please log in to your StockMaster account to manage delivery orders.
+          Please log in to your StockMaster account to view movement history.
         </p>
         <div class="space-y-3">
           <a
@@ -84,85 +71,6 @@
       class="fixed inset-0 bg-black/20 z-20 hidden lg:hidden"
     ></div>
 
-    <div
-      id="create-modal"
-      class="fixed inset-0 z-50 flex items-center justify-center hidden modal"
-    >
-      <div
-        class="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onclick="toggleModal()"
-      ></div>
-      <div
-        class="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative z-10 m-4 modal-content flex flex-col max-h-[90vh]"
-      >
-        <div
-          class="p-6 border-b border-gray-100 flex justify-between items-center"
-        >
-          <h3 class="text-xl font-bold text-gray-900">Create Delivery Order</h3>
-          <button
-            onclick="toggleModal()"
-            class="text-gray-400 hover:text-gray-600"
-          >
-            <i data-lucide="x" class="w-6 h-6"></i>
-          </button>
-        </div>
-        <div class="p-6 overflow-y-auto">
-          <form class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Customer</label
-                >
-                <select
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
-                >
-                  <option>Deco Addict</option>
-                  <option>Azure Interior</option>
-                  <option>Gemini Furniture</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Scheduled Date</label
-                >
-                <input
-                  type="date"
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Priority</label
-                >
-                <select
-                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
-                >
-                  <option>Normal</option>
-                  <option>Urgent</option>
-                </select>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div
-          class="p-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end space-x-3"
-        >
-          <button
-            onclick="toggleModal()"
-            class="px-6 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onclick="toggleModal()"
-            class="px-6 py-2.5 text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg shadow-lg shadow-emerald-200 transition-colors"
-          >
-            Create Delivery
-          </button>
-        </div>
-      </div>
-    </div>
-
     <aside
       id="sidebar"
       class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 sidebar-transition flex flex-col h-full"
@@ -183,6 +91,7 @@
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
+
       <nav class="flex-1 overflow-y-auto p-4 space-y-1">
         <div
           class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 pl-3 mt-2"
@@ -213,7 +122,7 @@
         >
         <a
           href="delivery.html"
-          class="flex items-center w-full p-3 rounded-lg mb-1 bg-emerald-50 text-emerald-600 font-medium transition-colors"
+          class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           ><i data-lucide="truck" class="w-5 h-5 mr-3"></i> Delivery Orders</a
         >
         <a
@@ -224,7 +133,7 @@
         >
         <a
           href="movehistory.html"
-          class="flex items-center w-full p-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          class="flex items-center w-full p-3 rounded-lg mb-1 bg-sky-50 text-sky-600 font-medium transition-colors"
           ><i data-lucide="arrow-left-right" class="w-5 h-5 mr-3"></i> Move
           History</a
         >
@@ -239,6 +148,7 @@
           ><i data-lucide="settings" class="w-5 h-5 mr-3"></i> Settings</a
         >
       </nav>
+
       <div class="p-4 border-t border-gray-100 relative">
         <div id="user-profile" class="hidden">
           <button
@@ -302,19 +212,29 @@
           </button>
           <div>
             <h2 class="text-lg font-semibold text-gray-800 hidden sm:block">
-              Delivery Orders
+              Move History
             </h2>
             <p class="text-xs text-gray-500 hidden sm:block">
-              Outgoing Stock Operations
+              Full Traceability Log
             </p>
           </div>
         </div>
         <div class="flex items-center space-x-4">
+          <div class="hidden md:flex relative">
+            <input
+              type="text"
+              placeholder="Search reference, product..."
+              class="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-full text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white transition-all w-64 outline-none"
+            />
+            <i
+              data-lucide="search"
+              class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"
+            ></i>
+          </div>
           <button
-            onclick="toggleModal()"
-            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center"
+            class="p-2 text-gray-400 hover:text-sky-600 hover:bg-sky-50 rounded-full transition-colors"
           >
-            <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Create Delivery
+            <i data-lucide="filter" class="w-5 h-5"></i>
           </button>
         </div>
       </header>
@@ -322,19 +242,42 @@
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
         <div class="max-w-7xl mx-auto">
           <div
-            class="flex flex-col sm:flex-row gap-4 mb-6 overflow-x-auto pb-2"
+            class="bg-white border border-gray-200 rounded-2xl shadow-sm mb-6"
           >
             <div
-              class="bg-white border-l-4 border-emerald-500 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
+              class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4"
             >
-              <div class="text-sm text-gray-500 mb-1">To Deliver</div>
-              <div class="text-2xl font-bold text-gray-900">4</div>
-            </div>
-            <div
-              class="bg-white border-l-4 border-orange-500 rounded-xl shadow-sm p-4 flex-1 min-w-[200px]"
-            >
-              <div class="text-sm text-gray-500 mb-1">Late</div>
-              <div class="text-2xl font-bold text-orange-600">1</div>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  class="px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm font-medium"
+                >
+                  All Moves
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg bg-gray-50 text-gray-600 text-sm font-medium hover:bg-gray-100"
+                >
+                  Incoming
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg bg-gray-50 text-gray-600 text-sm font-medium hover:bg-gray-100"
+                >
+                  Outgoing
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg bg-gray-50 text-gray-600 text-sm font-medium hover:bg-gray-100"
+                >
+                  Internal
+                </button>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-500">Sort by:</span>
+                <select
+                  class="text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-sky-500"
+                >
+                  <option>Date (Newest)</option>
+                  <option>Date (Oldest)</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -347,40 +290,40 @@
                   class="bg-gray-50 text-gray-500 font-medium uppercase text-xs border-b border-gray-100"
                 >
                   <tr>
-                    <th class="p-4 w-16">
-                      <input type="checkbox" class="rounded border-gray-300" />
-                    </th>
-                    <th class="p-4">Reference</th>
-                    <th class="p-4">Customer</th>
                     <th class="p-4">Date</th>
+                    <th class="p-4">Reference</th>
+                    <th class="p-4">Product</th>
+                    <th class="p-4">From</th>
+                    <th class="p-4">To</th>
+                    <th class="p-4 text-right">Quantity</th>
                     <th class="p-4">Status</th>
-                    <th class="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                  <tr
-                    class="hover:bg-gray-50 transition-colors group cursor-pointer"
-                  >
+                  <tr class="hover:bg-gray-50 transition-colors group">
+                    <td class="p-4 whitespace-nowrap text-gray-500">
+                      Oct 24, 10:30 AM
+                    </td>
+                    <td class="p-4 font-medium text-sky-600">WH/IN/00014</td>
+                    <td class="p-4 text-gray-900 font-medium">Office Chair</td>
                     <td class="p-4">
-                      <input type="checkbox" class="rounded border-gray-300" />
+                      <span class="px-2 py-1 bg-gray-100 rounded text-xs"
+                        >Vendors</span
+                      >
                     </td>
-                    <td class="p-4 font-medium text-indigo-600">
-                      WH/OUT/00054
+                    <td class="p-4">
+                      <span class="px-2 py-1 bg-gray-100 rounded text-xs"
+                        >WH/Stock</span
+                      >
                     </td>
-                    <td class="p-4">Gemini Furniture</td>
-                    <td class="p-4 text-red-600">Yesterday</td>
+                    <td class="p-4 text-right font-medium text-green-600">
+                      + 15.00
+                    </td>
                     <td class="p-4">
                       <span
-                        class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700"
-                        >Ready</span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"
+                        >Done</span
                       >
-                    </td>
-                    <td class="p-4 text-right">
-                      <button
-                        class="text-emerald-600 font-medium text-xs px-3 py-1 border border-emerald-200 rounded-md bg-emerald-50"
-                      >
-                        Validate
-                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -421,9 +364,6 @@
           .getElementById("sidebar")
           .classList.toggle("-translate-x-full");
         document.getElementById("mobile-overlay").classList.toggle("hidden");
-      }
-      function toggleModal() {
-        document.getElementById("create-modal").classList.toggle("hidden");
       }
       checkLoginState();
     </script>

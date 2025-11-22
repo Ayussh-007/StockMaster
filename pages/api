@@ -1,0 +1,93 @@
+<?php
+// api.php - Handle Database Connections
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+
+$servername = "localhost";
+$username = "root"; // Default XAMPP username
+$password = ""; // Default XAMPP password
+$dbname = "stock_master";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+}
+
+$action = $_GET['action'] ?? '';
+
+// 1. LOGIN
+if ($action == 'login' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+    $data = json_decode(file_get_contents("php://input"));
+    $login_id = $data->login_id;
+    $password = $data->password;
+
+    $stmt = $conn->prepare("SELECT password FROM login_credentials WHERE login_id = ?");
+    $stmt->bind_param("s", $login_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        if (password_verify($password, $row['password'])) {
+            echo json_encode(["success" => true, "message" => "Login successful"]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Invalid password"]);
+        }
+    } else {
+        echo json_encode(["success" => false, "message" => "User not found"]);
+    }
+    $stmt->close();
+}
+
+// 2. FETCH DASHBOARD STATS
+elseif ($action == 'stats') {
+    $total_products = $conn->query("SELECT COUNT(*) as count FROM products")->fetch_assoc()['count'];
+    $low_stock = $conn->query("SELECT COUNT(*) as count FROM products WHERE stock_quantity < 5")->fetch_assoc()['count'];
+    $pending_receipts = $conn->query("SELECT COUNT(*) as count FROM operations WHERE type='Receipt' AND status NOT IN ('Done', 'Canceled')")->fetch_assoc()['count'];
+    $pending_deliveries = $conn->query("SELECT COUNT(*) as count FROM operations WHERE type='Delivery' AND status NOT IN ('Done', 'Canceled')")->fetch_assoc()['count'];
+
+    echo json_encode([
+        "total_products" => $total_products,
+        "low_stock" => $low_stock,
+        "pending_receipts" => $pending_receipts,
+        "pending_deliveries" => $pending_deliveries
+    ]);
+}
+
+// 3. FETCH OPERATIONS
+elseif ($action == 'operations') {
+    $type = $_GET['type'] ?? '';
+    $sql = "SELECT * FROM operations";
+    if ($type) {
+        $sql .= " WHERE type = '$type'";
+    }
+    $result = $conn->query($sql);
+    $rows = [];
+    while ($r = $result->fetch_assoc()) {
+        $rows[] = $r;
+    }
+    echo json_encode($rows);
+}
+
+// 4. FETCH PRODUCTS
+elseif ($action == 'products') {
+    $result = $conn->query("SELECT * FROM products");
+    $rows = [];
+    while ($r = $result->fetch_assoc()) {
+        $rows[] = $r;
+    }
+    echo json_encode($rows);
+}
+
+// 5. FETCH MOVE HISTORY
+elseif ($action == 'history') {
+    $result = $conn->query("SELECT * FROM move_history ORDER BY date DESC");
+    $rows = [];
+    while ($r = $result->fetch_assoc()) {
+        $rows[] = $r;
+    }
+    echo json_encode($rows);
+}
+
+$conn->close();
+?>
